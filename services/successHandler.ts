@@ -1,11 +1,11 @@
-import { ServerResponse } from 'http'
 import { HEADERS } from '../const'
+import { Response } from 'express'
 
-export const successHandler = (res: ServerResponse, data?: object) => {
-  res.writeHead(200, HEADERS)
-  res.write(JSON.stringify({
-    status: 'Success',
-    data
-  }))
-  res.end()
+export const successHandler = (res: Response, data?: object) => {
+  res.set(HEADERS).status(200).send(
+    JSON.stringify({
+      status: 'Success',
+      data
+    })
+  ).end()
 }
