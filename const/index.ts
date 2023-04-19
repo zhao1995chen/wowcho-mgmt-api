@@ -13,7 +13,10 @@ const METHOD = {
   OPTIONS: 'OPTIONS'
 }
 
+const HASH_TIME = 12
+
 export {
   HEADERS,
-  METHOD
+  METHOD,
+  HASH_TIME
 }
