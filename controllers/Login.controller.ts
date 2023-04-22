@@ -35,7 +35,7 @@ export const LoginController = {
         secure: true,
         sameSite: true,
         signed: true,
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 七天後過期
+        expires: new Date(Date.now() + process.env.COOKIE_EXP) // 3 天後過期
       })
 
       successHandler(res)
