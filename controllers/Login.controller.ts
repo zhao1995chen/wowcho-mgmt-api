@@ -30,15 +30,15 @@ export const LoginController = {
       // console.log('jwt', token)
 
       // 保存 JWT
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: true,
-        signed: true,
-        expires: new Date(Date.now() + process.env.COOKIE_EXP) // 3 天後過期
-      })
+      // res.cookie('token', token, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: true,
+      //   signed: true,
+      //   expires: new Date(Date.now() + process.env.COOKIE_EXP) // 3 天後過期
+      // })
 
-      successHandler(res)
+      successHandler(res, { token })
     } catch(e) {
       errorHandler(res, e)
     }
