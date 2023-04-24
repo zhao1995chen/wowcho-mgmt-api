@@ -5,6 +5,7 @@ import cors from 'cors'
 import { uploadRouter } from './routes/Upload.route'
 
 import { registerRouter } from './routes/Register.route'
+import { profileRouter } from './routes/Profile.route'
 import { loginRouter } from './routes/Login.route'
 import { userRouter } from './routes/User.route'
 
@@ -19,6 +20,6 @@ app.use('/upload', uploadRouter)
 
 app.use('/register', registerRouter)
 app.use('/login', loginRouter)
-app.use('/profile', userRouter)
+app.use('/profile', profileRouter)
 
 export default app

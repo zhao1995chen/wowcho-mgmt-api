@@ -15,26 +15,27 @@ const generateToken = (user: ILogin) => {
 }
 
 // 驗證 token
-const isAuth = async (req: Request, res: Response) => {
+const isAuth = async (req: Request, res: Response, next: any) => {
   try {
-    let token: string, _id: string
+    let token: string
+    // console.log(req.headers.authorization)
 
     // 確認 token 存在及格式正確
     if (req.headers.authorization?.startsWith('Bearer')) token = req.headers.authorization.split(' ')[1]
     if (!token) throw '請登入後操作'
 
     // 驗證 token 值正確
-    jwt.verify(token, process.env.JWT_SECRET, (e: Error, payload: ILogin) => {
+    jwt.verify(token, process.env.JWT_SECRET, (e: Error, payload: any) => {
       if (e) {
+        console.log(e)
         throw e
       }
-      _id = payload._id
+
+      // 傳遞 id 給後續操作
+      req.body._id = payload.id
     })
 
-    const currentUser = await User.findById(_id)
-
-    // 傳遞會員資料給後續操作
-    req.body.user = currentUser 
+    next()
   } catch(e) {
     errorHandler(res, e)
   }
