@@ -21,9 +21,7 @@ const ProfileSchema = new Schema<IProfile>(
       type: String,
       required: [true, '信箱必填'],
     },
-    image: {
-      type: String
-    },
+    image:  String,
     isAllowedNotifications: {
       type: Boolean,
       required: [true, '是否允許通知必填'],
@@ -32,32 +30,18 @@ const ProfileSchema = new Schema<IProfile>(
       type: Boolean,
       required: [true, '是否訂閱電子報必填'],
     },
-    customizedUrl: {
-      type: String
-    },
+    customizedUrl:  String,
     gender: {
       type: Number,
       required: [true, '性別必填'],
       enum: [ -1, 0, 1, 2, 3, 4 ],
     },
-    birthday: {
-      type: Number
-    },
-    address: {
-      type: String
-    },
-    website: {
-      type: String
-    },
-    facebook: {
-      type: String
-    },
-    instagram: {
-      type: String
-    },
-    youtube: {
-      type: String
-    },
+    birthday:  Number,
+    address:  String,
+    website:  String,
+    facebook: String,
+    instagram: String,
+    youtube:  String,
   },
   {
     versionKey: false,
