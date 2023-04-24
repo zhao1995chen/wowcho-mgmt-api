@@ -1,7 +1,18 @@
 import jwt from 'jsonwebtoken'
+import { ILogin } from '../interfaces/Login.interface'
 import { Request, Response } from 'express'
 import { errorHandler } from '../services/errorHandler'
+import { User } from '../models/User.model'
 import { Error } from 'mongoose'
+
+// 產生 token
+const generateToken = (user: ILogin) => {
+  return jwt.sign(
+    { id: user._id },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN }
+  )
+}
 
 // 驗證 token
 const isAuth = async (req: Request, res: Response, next: any) => {
@@ -31,5 +42,6 @@ const isAuth = async (req: Request, res: Response, next: any) => {
 }
 
 export {
+  generateToken,
   isAuth
 }
