@@ -6,4 +6,4 @@ import { ProfileController } from '../controllers/Profile.controller'
 export const profileRouter = express.Router()
 
 profileRouter.get('/', isAuth, ProfileController.get)
-profileRouter.post('/', isAuth, ProfileController.update)
+profileRouter.patch('/', isAuth, ProfileController.update)
