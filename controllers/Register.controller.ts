@@ -1,10 +1,11 @@
-import byrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import { Request, Response } from 'express'
 import { errorHandler } from '../services/errorHandler'
 import { successHandler } from '../services/successHandler'
 import { Register } from '../models/Register.model'
 import { IRegister } from '../interfaces/Register.interface'
 import { HASH_TIME } from '../const'
+import { User } from '../models/User.model'
 
 export const RegisterController = {
   async create(req: Request, res: Response) {
@@ -23,7 +24,7 @@ export const RegisterController = {
       
       // 創建新會員
       const { account, email, password } = newMember
-      const hashPassword = await byrypt.hash(password, HASH_TIME)
+      const hashPassword = await bcrypt.hash(password, HASH_TIME)
       // console.log('hash', hashPassword)
 
       await Register.create({
@@ -42,10 +43,12 @@ export const RegisterController = {
     successHandler(res)
   },
   async duplicate(value: IRegister) {
-    console.log(value)
+    // console.log(value)
+
     const { account, email } = value
-    if (await Register.exists({ account })) return '帳號已使用'
-    if (await Register.exists({ email })) return '信箱已使用'
+
+    if (await User.exists({ account })) return '帳號已使用'
+    if (await User.exists({ email })) return '信箱已使用'
     return
   }
 }

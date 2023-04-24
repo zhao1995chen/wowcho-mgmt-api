@@ -1,5 +1,6 @@
-import { Schema, model } from 'mongoose'
+import { Schema } from 'mongoose'
 import { IRegister } from '../interfaces/Register.interface'
+import { User } from './User.model'
 
 const RegisterSchema = new Schema<IRegister>(
   {
@@ -30,7 +31,7 @@ const RegisterSchema = new Schema<IRegister>(
   }
 )
 
-const Register = model<IRegister>('user', RegisterSchema)
+const Register = User.discriminator<IRegister>('register', RegisterSchema)
 
 export {
   Register,

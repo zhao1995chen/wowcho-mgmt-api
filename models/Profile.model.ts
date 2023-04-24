@@ -1,14 +1,9 @@
-import { Schema, model } from 'mongoose'
+import { Schema } from 'mongoose'
 import { IProfile } from '../interfaces/Profile.interface'
+import { User } from './User.model'
 
 const ProfileSchema = new Schema<IProfile>(
   {
-    account: {
-      type: String,
-      required: [true, '帳號必填'],
-      unique: true,
-      immutable: true // 設置該欄位為不可更改
-    },
     name: {
       type: String,
       required: [true, '真實姓名必填'],
@@ -49,7 +44,7 @@ const ProfileSchema = new Schema<IProfile>(
   }
 )
 
-const Profile = model<IProfile>('User', ProfileSchema)
+const Profile = User.discriminator<IProfile>('profile', ProfileSchema)
 
 export {
   Profile,
