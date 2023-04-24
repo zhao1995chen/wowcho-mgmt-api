@@ -1,5 +1,6 @@
-import { Schema, model } from 'mongoose'
+import { Schema } from 'mongoose'
 import { ILogin } from '../interfaces/Login.interface'
+import { User } from './User.model'
 
 const LoginSchema = new Schema<ILogin>(
   {
@@ -19,7 +20,7 @@ const LoginSchema = new Schema<ILogin>(
   }
 )
 
-const Login = model<ILogin>('user', LoginSchema)
+const Login = User.discriminator<ILogin>('login', LoginSchema)
 
 export {
   Login,

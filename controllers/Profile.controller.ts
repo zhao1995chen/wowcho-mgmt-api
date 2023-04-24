@@ -3,15 +3,16 @@
 import { Request, Response } from 'express'
 import { successHandler } from '../services/successHandler'
 import { errorHandler } from '../services/errorHandler'
-import { IProfile } from '../interfaces/Profile.interface'
 import { Profile } from '../models/Profile.model'
+import { User } from '../models/User.model'
+import { IProfile } from '../interfaces/Profile.interface'
 
 export const ProfileController = {
   async get(req: Request, res: Response) {
     // 取得會員資料
     try {
       const { _id } = req.body
-      const data: IProfile = await Profile.findById(_id).select({ _id: 0, password: 0 })
+      const data = await User.findById(_id).select({ _id: 0, password: 0 })
       // console.log('get', data)
 
       successHandler(res, data)
@@ -30,8 +31,16 @@ export const ProfileController = {
       const validateError = payload.validateSync()
       if (validateError) throw validateError
 
-      await Profile.findOneAndUpdate({ _id }, payload)
-      const data = await Profile.findById(_id).select({ _id: 0, password: 0 })
+      // 確認 email 是否變更
+      const oldProfileData = await User.findById(_id)
+      if (payload.email !== oldProfileData.email) {
+        // 確認沒有重複的 email
+        const duplicate = await ProfileController.duplicate(payload)
+        if (duplicate) throw duplicate
+      }
+
+      await User.findOneAndUpdate({ _id }, payload)
+      const data = await User.findById(_id).select({ _id: 0, password: 0 })
 
       successHandler(res, data)
     } catch(e) {
@@ -40,5 +49,13 @@ export const ProfileController = {
   },
   options(req: Request, res: Response) {
     successHandler(res)
+  },
+  async duplicate(value: IProfile) {
+    // console.log(value)
+
+    const { email } = value
+    
+    if (await User.exists({ email })) return '信箱已使用'
+    return
   }
 }

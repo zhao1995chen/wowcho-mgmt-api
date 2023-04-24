@@ -5,6 +5,7 @@ import { Login } from '../models/Login.model'
 import bcrypt from 'bcryptjs'
 import { ILogin } from '../interfaces/Login.interface'
 import { generateToken } from '../middlewares/Auth.middleware'
+import { User } from '../models/User.model'
 
 export const LoginController = {
   async login(req: Request, res: Response) {
@@ -17,11 +18,12 @@ export const LoginController = {
       if (validateError) throw validateError
 
       // 查找會員
-      const user = await Login.findOne<ILogin>({ account: loginData.account })
+      const user = await User.findOne<ILogin>({ account: loginData.account })
+      // console.log('user', loginData.password, user.password)
       if (!user) throw '帳號不存在'
 
       // 驗證密碼
-      const validPassword = await bcrypt.compare(loginData.password, user.password )
+      const validPassword = await bcrypt.compare(loginData.password, user.password)
       if (!validPassword) throw '密碼輸入錯誤'
       // console.log('password pass')
 

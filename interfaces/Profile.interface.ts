@@ -10,7 +10,6 @@ enum Gender {
 }
 
 interface IProfile extends Document {
-  account: string // 帳號
   name: string // 真實姓名
   username: string // 用戶名稱
   email: string // 信箱
