@@ -12,10 +12,11 @@ const RegisterSchema = new Schema<IRegister>(
       type: String,
       minlength: [ 8, '密碼最少要 8 碼'],
       required: [ true, '密碼必填' ],
+      select: false
     },
     email: {
       type: String,
-      required: [ true, '密碼必填' ],
+      required: [ true, '信箱必填' ],
       validate:{
         validator: (email: string) => {
           const regExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
