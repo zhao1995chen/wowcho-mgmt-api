@@ -32,6 +32,8 @@ interface IProposal extends Document {
 	customizedUrl:string
 	// 詳細內容
 	contentsId: string
+	// 狀態 0 = 草稿，前台看不到 1 = 上架
+	status: number
 
 	// 關聯
 	// 提案人

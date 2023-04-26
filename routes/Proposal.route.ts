@@ -5,5 +5,5 @@ import { ProposalController } from '../controllers/Proposal.controller'
 
 export const proposalRouter = express.Router()
 
-// Proposal.get('/', isAuth, ProfileController.get)
+proposalRouter.get('/', isAuth, ProposalController.getList)
 proposalRouter.post('/', isAuth, ProposalController.create)
