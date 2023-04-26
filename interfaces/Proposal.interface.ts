@@ -1,0 +1,53 @@
+import { Document, Types } from 'mongoose'
+
+
+enum ageLimit {
+  notLimited = 0, // 無限制
+	r18 = 1// 18 禁
+}
+
+interface IProposal extends Document {
+  _id?: string
+	//圖片網址
+  imageUrl:string, 
+	//影片
+	video:string,
+	//活動名稱
+	name:string,
+	//活動分類
+	category:string
+	//活動簡介
+	summary:string,
+	//活動描述
+	description:string 
+	//目標金額
+	targetPrice:number,
+	//募資開始時間
+	starTime:number,
+	//募資結束時間
+	endTime: number | null,
+	// 年齡限制
+	ageLimit:number | null,
+	// 客製化 URL
+	customizedUrl:string
+	// 詳細內容
+	contentsId: string
+
+	// 關聯
+	// 提案人
+	ownerId: Types.ObjectId;
+	// 募資方案 ID 列表
+	planIdList: Array<Types.ObjectId>;
+	// 留言id列表
+	messageIdList: Array<Types.ObjectId>;
+	// 常見問答id列表
+	faqIdList: Array<Types.ObjectId>;
+	// 承諾與告示id列表
+	promisesId:Array<Types.ObjectId>;
+	placardIdList: Array<Types.ObjectId>;
+}
+
+export {
+  IProposal,
+  ageLimit
+}
