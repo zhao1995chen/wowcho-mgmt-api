@@ -2,10 +2,10 @@ import { Request, Response } from 'express'
 import { successHandler } from '../services/successHandler'
 import { errorHandler } from '../services/errorHandler'
 import { Proposal } from '../models/Proposal.model'
-import { User } from '../models/User.model'
 import { IProposal } from '../interfaces/Proposal.interface'
 
 export const ProposalController = {
+  // 新增
   async create(req: Request, res: Response) {
     try {
       req.body.user = req.body._id
@@ -35,8 +35,22 @@ export const ProposalController = {
 
     const { customizedUrl } = value
 
-    if (await User.exists({ customizedUrl })) return '專案網址已使用'
+    if (await Proposal.exists({ customizedUrl })) return '專案網址已使用'
     return
+  },
+  // 獲得列表
+  async getList(req: Request, res: Response) {
+    try {
+      const pageSize = Number(req.params.pageSize) || 10 // 每頁顯示幾筆資料
+      const page = Number(req.params.page) || 1 // 目前頁數
+      const proposalList = await Proposal.find({})
+        .select('_id imageUrl name category summary targetPrice starTime endTime updatedAt createdAt')
+        .skip((pageSize * page) - pageSize)
+        .limit(pageSize)
+      successHandler(res, proposalList)
+    } catch(e) {
+      errorHandler(res, e)
+    }
   },
   options(req: Request, res: Response) {
     successHandler(res)

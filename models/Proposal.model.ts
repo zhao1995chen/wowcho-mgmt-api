@@ -51,6 +51,10 @@ const ProposalSchema = new Schema<IProposal>(
       type: String,
       default: ''
     },
+    status: {
+      type: Number,
+      default: 1
+    }
   },
   {
     versionKey: false, // 其實用不到
