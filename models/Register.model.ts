@@ -1,8 +1,9 @@
 import { Schema } from 'mongoose'
 import { IRegister } from '../interfaces/Register.interface'
 import { User } from './User.model'
+import { IUser } from '../interfaces/User.interface'
 
-const RegisterSchema = new Schema<IRegister>(
+const RegisterSchema = new Schema<IUser & IRegister>(
   {
     account: {
       type: String,
@@ -11,8 +12,7 @@ const RegisterSchema = new Schema<IRegister>(
     password: {
       type: String,
       minlength: [ 8, '密碼最少要 8 碼'],
-      required: [ true, '密碼必填' ],
-      select: false
+      required: [ true, '密碼必填' ]
     },
     email: {
       type: String,
