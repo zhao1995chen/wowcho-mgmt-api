@@ -8,9 +8,9 @@ export const ProposalController = {
   // 新增
   async create(req: Request, res: Response) {
     try {
-      req.body.user = req.body._id
+      req.body.ownerId = req.body._id
       delete req.body._id
-      const newProposal = new Proposal(req.body)
+      const newProposal:IProposal = new Proposal(req.body)
       // 驗證資料
       const validateError = newProposal.validateSync()
       if (validateError) throw validateError
@@ -41,14 +41,28 @@ export const ProposalController = {
   // 獲得列表
   async getList(req: Request, res: Response) {
     try {
-      const pageSize = Number(req.params.pageSize) || 10 // 每頁顯示幾筆資料
-      const page = Number(req.params.page) || 1 // 目前頁數
-      const proposalList = await Proposal.find({})
+      const pageSize = Number(req.query.pageSize) || 10 // 每頁顯示幾筆資料
+      const page = Number(req.query.page) || 1 // 目前頁數
+      const proposalList = await Proposal.find({ ownerId: req.body._id })
         .select('_id imageUrl name category summary targetPrice starTime endTime updatedAt createdAt')
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
       successHandler(res, proposalList)
     } catch(e) {
+      errorHandler(res, e)
+    }
+  },
+  // 獲得詳細資訊
+  async get(req: Request, res: Response) {
+    try {
+      const id = req.query.id // 每頁顯示幾筆資料
+      const proposal = await Proposal.findOne<IProposal>({ _id:id })
+      if (!proposal) throw '募資活動 ID 錯誤'
+      // 資料擁有者 和 JWT 使用者不匹配
+      if (proposal.ownerId.toString() !== req.body._id) throw '無權查看此募資活動'
+      successHandler(res, proposal)
+    }
+    catch(e) {
       errorHandler(res, e)
     }
   },
