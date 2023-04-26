@@ -8,6 +8,7 @@ import { registerRouter } from './routes/Register.route'
 import { profileRouter } from './routes/Profile.route'
 import { loginRouter } from './routes/Login.route'
 import { userRouter } from './routes/User.route'
+import { proposalRouter } from './routes/Proposal.route'
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(cors())
 
 // TODO 先放根目錄提供會員功能還沒好前串接測試，有會員後需要移到各自 API 內
 app.use('/upload', uploadRouter)
+app.use('/proposal', proposalRouter)
 
 app.use('/register', registerRouter)
 app.use('/login', loginRouter)
