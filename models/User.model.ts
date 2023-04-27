@@ -53,6 +53,10 @@ const UserSchema = new Schema<IUser>(
       type: String,
       default: null,
     },
+    __t: {
+      type: String,
+      select: false
+    }
   },
   {
     versionKey: false,
