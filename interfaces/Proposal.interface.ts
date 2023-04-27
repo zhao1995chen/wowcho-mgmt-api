@@ -22,6 +22,8 @@ interface IProposal extends Document {
 	description:string 
 	//目標金額
 	targetPrice:number,
+	// 當前集資金額
+	nowPrice:number,
 	//募資開始時間
 	starTime:number,
 	//募資結束時間
