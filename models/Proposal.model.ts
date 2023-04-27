@@ -1,5 +1,6 @@
 import { Schema,model } from 'mongoose'
 import { IProposal } from '../interfaces/Proposal.interface'
+import { v4 as uuidv4 } from 'uuid'
 
 const ProposalSchema = new Schema<IProposal>(
   {
@@ -49,7 +50,7 @@ const ProposalSchema = new Schema<IProposal>(
     },
     customizedUrl: {
       type: String,
-      default: ''
+      default: () => uuidv4()
     },
     status: {
       type: Number,
