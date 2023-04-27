@@ -36,6 +36,9 @@ const ProposalSchema = new Schema<IProposal>(
       type: Number,
       required: [ true, '募資活動達標金額必填' ]
     },
+    nowPrice: {
+      type: Number,
+    },
     starTime: {
       type: Number,
       required: [ true, '募資活動開始時間必填' ]
