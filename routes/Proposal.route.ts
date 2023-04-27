@@ -9,3 +9,5 @@ proposalRouter
   .get('/', isAuth, ProposalController.getList)
   .get('/details', isAuth, ProposalController.get)
   .post('/', isAuth, ProposalController.create)
+  .patch('/details', isAuth, ProposalController.update)
+  .delete('/', isAuth, ProposalController.delete)
