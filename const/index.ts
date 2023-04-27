@@ -25,8 +25,11 @@ const ERROR = {
   INVALID: 'fieldName is invalid'
 }
 
+const HASH_TIME = 12
+
 export {
   HEADERS,
   METHOD,
-  ERROR
+  ERROR,
+  HASH_TIME
 }
