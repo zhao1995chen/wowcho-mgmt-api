@@ -13,10 +13,23 @@ const METHOD = {
   OPTIONS: 'OPTIONS'
 }
 
+const ERROR = {
+  // 如果有其他 error message 需求繼續往下新增
+  GENERAL: 'Please vheck your data.',
+  CORS: 'CORS',
+  PERMISSION_DENIED: 'Permission denied.',
+  REQUIRED: 'fieldName is required.',
+  NOT_CHANGED: 'fieldName is not changed.',
+  ERROR_FORMAT: 'filedName does not match the format.',
+  DUPLICATE: 'fieldValue is already taken.',
+  INVALID: 'fieldName is invalid'
+}
+
 const HASH_TIME = 12
 
 export {
   HEADERS,
   METHOD,
+  ERROR,
   HASH_TIME
 }
