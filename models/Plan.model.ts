@@ -1,6 +1,22 @@
 import { Schema,model } from 'mongoose'
 import { IPlan } from '../interfaces/Plan.interface'
 
+const SpecificationSchema = new Schema({
+  title: {
+    type: String,
+    required: [true, '規格標題必填'],
+  },
+  option: {
+    type: [String],
+    validate: {
+      validator (options) {
+        return options.length > 0
+      },
+      message: '選項必須設定最少一個值',
+    },
+  },
+})
+
 const PlanSchema = new Schema<IPlan>(
   {
     proposalId: {
@@ -39,12 +55,7 @@ const PlanSchema = new Schema<IPlan>(
       type: String,
       default:''
     },
-    specification:[
-      { 
-        title:String,
-        option:Array<string> 
-      }
-    ],
+    specification: [SpecificationSchema],
     freightMainIsland:{
       type: Number,
       default:null
