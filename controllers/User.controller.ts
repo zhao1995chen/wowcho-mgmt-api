@@ -9,7 +9,7 @@ export const UserController = {
   async get(req: Request, res: Response) {
     // 取得會員資料
     try {
-      const data = await User.find().catch(() => { throw '會員不存在' })
+      const data = await User.find().catch(() => { throw { message: '會員不存在' } })
       successHandler(res, data)
     } catch(e) {
       errorHandler(res, e)

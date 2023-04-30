@@ -4,18 +4,67 @@ import { IUser } from '../interfaces/User.interface'
 
 const UserSchema = new Schema<IUser>(
   {
-    account: {
+    account: String,
+    password: String,
+    name: String,
+    username: String,
+    email: String,
+    image: {
       type: String,
-      required: [ true, '帳號必填' ]
+      default: null,
+    },
+    isAllowedNotifications: {
+      type: Boolean,
+      default: true,
+    },
+    isSubscribed: {
+      type: Boolean,
+      default: true,
+    },
+    customizedUrl: {
+      type: String,
+      default: null
+    },
+    gender: {
+      type: Number,
+      default: null,
+    },
+    birthday: {
+      type: Number,
+      default: null,
+    },
+    address: {
+      type: String,
+      default: null,
+    },
+    website: {
+      type: String,
+      default: null,
+    },
+    facebook: {
+      type: String,
+      default: null,
+    },
+    instagram: {
+      type: String,
+      default: null,
+    },
+    youtube:  {
+      type: String,
+      default: null,
+    },
+    __t: {
+      type: String,
+      select: false
     }
-    // 繼續填寫
   },
   {
-    versionKey: false
+    versionKey: false,
+    timestamps: true
   }
 )
 
-const User = model<IUser>('User', UserSchema)
+const User = model<IUser>('user', UserSchema)
 
 export {
   User,
