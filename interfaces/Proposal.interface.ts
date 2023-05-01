@@ -15,7 +15,7 @@ interface IProposal extends Document {
 	//活動名稱
 	name:string,
 	//活動分類
-	category:string
+  category: 0 | 1 | 2 | 3 | 4 | 5 | 6 // 提案類別
 	//活動簡介
 	summary:string,
 	//活動描述
@@ -25,7 +25,7 @@ interface IProposal extends Document {
 	// 當前集資金額
 	nowPrice:number,
 	//募資開始時間
-	starTime:number,
+	startTime:number,
 	//募資結束時間
 	endTime: number | null,
 	// 年齡限制
@@ -47,7 +47,7 @@ interface IProposal extends Document {
 	// 常見問答id列表
 	faqIdList: Array<Types.ObjectId>;
 	// 承諾與告示id列表
-	promisesId:Array<Types.ObjectId>;
+	promiseId:Array<Types.ObjectId>;
 	placardIdList: Array<Types.ObjectId>;
 }
 

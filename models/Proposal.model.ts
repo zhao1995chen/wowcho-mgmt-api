@@ -21,7 +21,8 @@ const ProposalSchema = new Schema<IProposal>(
       required: [ true, '募資活動名稱必填' ]
     }, 
     category: {
-      type: String,
+      type: Number,
+      enum: [0, 1, 2, 3, 4, 5, 6],
       required: [ true, '募資活動分類必填' ]
     },
     summary: {
@@ -39,7 +40,7 @@ const ProposalSchema = new Schema<IProposal>(
     nowPrice: {
       type: Number,
     },
-    starTime: {
+    startTime: {
       type: Number,
       required: [ true, '募資活動開始時間必填' ]
     },
@@ -58,13 +59,33 @@ const ProposalSchema = new Schema<IProposal>(
     status: {
       type: Number,
       default: 1
-    }
+    },
+    // 關聯
+    planIdList:[
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'plan',
+      }
+    ],
+    faqIdList:  [{
+      type: Schema.Types.ObjectId,
+      ref: 'faq'
+    }],
+    promiseId: [{
+      type: Schema.Types.ObjectId,
+      ref: 'promise'
+    }],
   },
   {
     versionKey: false, // 其實用不到
     timestamps: true // 其實用不到
   }
 )
+
+ProposalSchema.methods.addPlan = function(id) {
+  this.planIdList.push(id)
+  return this.save()
+}
 
 const Proposal = model<IProposal>('proposal', ProposalSchema)
 
