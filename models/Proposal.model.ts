@@ -39,6 +39,7 @@ const ProposalSchema = new Schema<IProposalDocument>(
     },
     nowPrice: {
       type: Number,
+      default: 0,
     },
     startTime: {
       type: Number,
@@ -88,10 +89,13 @@ ProposalSchema.methods.pushPlan = function(id) {
   return this.save()
 }
 
-// 移除方案 id 
-ProposalSchema.methods.removePlan = function(id) {
-  const index = this.planIdList.findIndex(item => item === id)
-  this.planIdList.splice(index,1)
+// 移除方案 id
+ProposalSchema.methods.removePlan = function(array) {
+  this.planIdList.forEach((value, index) => {
+    if (array.includes(value)) {
+      this.planIdList.splice(index, 1)
+    }
+  })
   return this.save()
 }
 
