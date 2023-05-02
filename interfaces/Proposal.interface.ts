@@ -54,7 +54,7 @@ interface IProposal extends Document {
 }
 interface IProposalDocument extends IProposal {
   pushPlan: (id: Types.ObjectId) => void;
-  removePlan: (id: Types.ObjectId) => void;
+  removePlan: (array) => void;
   addNowBuyers: () => void;
   addNowPrice: (number) => void;
 }
