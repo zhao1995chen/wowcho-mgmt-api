@@ -24,6 +24,8 @@ interface IProposal extends Document {
 	targetPrice:number,
 	// 當前集資金額
 	nowPrice:number,
+	// 當前購買人數
+	nowBuyers:number,
 	//募資開始時間
 	startTime:number,
 	//募資結束時間
@@ -50,8 +52,16 @@ interface IProposal extends Document {
 	promiseId:Array<Types.ObjectId>;
 	placardIdList: Array<Types.ObjectId>;
 }
+interface IProposalDocument extends IProposal {
+	pushPlan: (id: Types.ObjectId) => void;
+  removePlan: (id: Types.ObjectId) => void;
+	addNowBuyers: () => void;
+	addNowPrice: (number) => void;
+
+}
 
 export {
+  IProposalDocument,
   IProposal,
   ageLimit
 }

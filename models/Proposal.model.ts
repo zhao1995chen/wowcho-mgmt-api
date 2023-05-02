@@ -82,8 +82,28 @@ const ProposalSchema = new Schema<IProposal>(
   }
 )
 
-ProposalSchema.methods.addPlan = function(id) {
+// 新增方案 id 至募資活列表
+ProposalSchema.methods.pushPlan = function(id) {
   this.planIdList.push(id)
+  return this.save()
+}
+
+// 移除方案 id 
+ProposalSchema.methods.removePlan = function(id) {
+  const index = this.planIdList.findIndex(item => item === id)
+  this.planIdList.splice(index,1)
+  return this.save()
+}
+
+// 購買時增加當前購買數
+ProposalSchema.methods.addNowBuyers = function() {
+  this.nowBuyers += 1
+  return this.save()
+}
+
+// 購買時增加當前募資總金額
+ProposalSchema.methods.addNowPrice = function(Price:number) {
+  this.nowPrice += Price
   return this.save()
 }
 
