@@ -40,8 +40,8 @@ export const ProposalController = {
   // 編輯
   async update(req: Request, res: Response) {
     try {
-      const { id, ownerId, imageUrl, video, name, category, summary, description, targetPrice, startTime, endTime, ageLimit, customizedUrl, status, planIdList, messageIdList, faqIdList, promiseId } =  req.body 
-      const userProposal = { ownerId, imageUrl, video, name, category, summary, description, targetPrice, startTime, endTime, ageLimit, customizedUrl, status, planIdList, messageIdList, faqIdList, promiseId }
+      const { id, ownerId, imageUrl, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, planIdList, messageIdList, faqIdList, promiseId } =  req.body 
+      const userProposal = { ownerId, imageUrl, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, planIdList, messageIdList, faqIdList, promiseId }
       // 募資活動網址重複
       const updateDuplicate = await ProposalController.updateDuplicate(customizedUrl,id)
       if (updateDuplicate) throw updateDuplicate
@@ -80,7 +80,7 @@ export const ProposalController = {
       const pageSize = Number(req.query.pageSize) || 10 // 每頁顯示幾筆資料
       const page = Number(req.query.page) || 1 // 目前頁數
       const proposalList = await Proposal.find({ ownerId: req.body._id })
-        .select('_id imageUrl name customizedUrl category summary targetPrice startTime endTime updatedAt createdAt')
+        .select('_id imageUrl name customizedUrl category summary targetPrice nowPrice nowBuyers startTime endTime updatedAt createdAt')
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
       successHandler(res, proposalList)
