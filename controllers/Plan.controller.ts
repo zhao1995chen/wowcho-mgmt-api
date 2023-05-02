@@ -28,12 +28,11 @@ export const PlanController = {
       const checkProposal = await PlanController.checkProposal(ProposalId)
       // 若不存在跳錯
       if (!checkProposal) throw '募資活動 ID 不存在'
+
       // 驗證都通過，儲存新增 plan 至資料庫
       const savedPlan = await newPlan.save()
       // 將 id push 至 Proposal
-      checkProposal.planIdList.push(savedPlan._id)
-      // 將更新後 Proposal 儲存資料庫
-      await checkProposal.save()
+      await checkProposal.pushPlan(savedPlan._id)
       successHandler(res,savedPlan)
     } catch(e) {
       errorHandler(res, e)
@@ -41,15 +40,13 @@ export const PlanController = {
   },
   // 編輯
   async update(req: Request, res: Response) {
-    // console.log('test', req.body)
     try {
       // 確認募資活動、募資方案 id
       const checkId = PlanController.checkId(req.body)
-      console.log(checkId)
       if(checkId) throw checkId
       // 找符合 募資活動、募資方案 id
-      const { id, proposalId, image, name, summary, originalPrice, actualPrice, quantity, pickupDate, toSponsor, specification, freightMainIsland, freightOuterIsland, freightOtherCountries } = req.body 
-      const userPlan = { proposalId, image, name, summary, originalPrice, actualPrice, quantity, pickupDate, toSponsor, specification, freightMainIsland, freightOuterIsland, freightOtherCountries }
+      const { id, proposalId, image, name, summary, originalPrice, actualPrice, quantity, nowBuyers, pickupDate, toSponsor, specification, freightMainIsland, freightOuterIsland, freightOtherCountries } = req.body 
+      const userPlan = { proposalId, image, name, summary, originalPrice, actualPrice, quantity, nowBuyers, pickupDate, toSponsor, specification, freightMainIsland, freightOuterIsland, freightOtherCountries }
       
       console.log('userPlan', userPlan)
       // 確認原價是否有值，有值才做驗證
@@ -126,19 +123,18 @@ export const PlanController = {
   async delete (req: Request, res: Response) {
     try {
     // 檢查所有文檔是否存在
-      const ProposalId = req.body.proposalId
-      const array = req.body.id
+      const proposalId = req.body.proposalId
+      const planArray = req.body.id
       // 確認資料庫是否有刪除 id
-      const planList = await Plan.find({ _id: { $in: array } })
+      const planList = await Plan.find({ _id: { $in: planArray } })
       if (!planList) throw '找不到相對應的募資方案'
-      const proposal = await Proposal.findById({ _id: ProposalId })
+      const proposal = await Proposal.findById({ _id: proposalId })
       if (!proposal) throw '找不到相對應的募資活動'
 
       // 刪除募資方案資料
-      const index = proposal.planIdList.findIndex(item => item === ProposalId)
-      proposal.planIdList.splice(index,1)
+      proposal.removePlan(planArray)
       // 刪除方案
-      await Plan.deleteMany({ _id: { $in: array } })
+      await Plan.deleteMany({ _id: { $in: planArray } })
       // 刪除活動中方案 id 
       await proposal.save()
       // splice

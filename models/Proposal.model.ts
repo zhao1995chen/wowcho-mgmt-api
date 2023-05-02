@@ -4,12 +4,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 const ProposalSchema = new Schema<IProposalDocument>(
   {
-    planIdList:[
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'plan',
-      }
-    ],
     ownerId: {
       type: Schema.Types.ObjectId,
       ref: 'user',

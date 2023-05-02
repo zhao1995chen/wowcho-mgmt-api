@@ -16,6 +16,8 @@ interface IPlan extends Document {
 	actualPrice:number,
 	//募資商品數量
 	quantity: number | null,
+	// 該方案已賣出數量
+	nowBuyers: number,
 	// 出貨日期
 	pickupDate:number | null,
   // 給贊助者的話
@@ -31,6 +33,12 @@ interface IPlan extends Document {
 	freightOtherCountries:number | null,
 }
 
+interface IPlanDocument extends IPlan {
+  removeQuantity: () => void;
+  addNowBuyers: () => void;
+}
+
 export {
   IPlan,
+  IPlanDocument
 }

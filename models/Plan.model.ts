@@ -1,5 +1,5 @@
 import { Schema,model } from 'mongoose'
-import { IPlan } from '../interfaces/Plan.interface'
+import { IPlanDocument } from '../interfaces/Plan.interface'
 
 const SpecificationSchema = new Schema({
   title: {
@@ -17,7 +17,7 @@ const SpecificationSchema = new Schema({
   },
 })
 
-const PlanSchema = new Schema<IPlan>(
+const PlanSchema = new Schema<IPlanDocument>(
   {
     proposalId: {
       type: Schema.Types.ObjectId,
@@ -47,6 +47,10 @@ const PlanSchema = new Schema<IPlan>(
       type: Number,
       default: null,
     },
+    nowBuyers: {
+      type: Number,
+      default: 0,
+    },
     pickupDate: {
       type: Number,
       default: null,
@@ -75,7 +79,19 @@ const PlanSchema = new Schema<IPlan>(
   }
 )
 
-const Plan = model<IPlan>('plan', PlanSchema)
+// 購買時增加方案購買數亮
+PlanSchema.methods.addNowBuyers = function() {
+  this.nowBuyers += 1
+  return this.save()
+}
+
+// 購買時減少商品總數
+PlanSchema.methods.removeQuantity = function() {
+  this.nowBuyers - 1 
+  return this.save()
+}
+
+const Plan = model<IPlanDocument>('plan', PlanSchema)
 
 export {
   Plan,
