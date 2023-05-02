@@ -53,11 +53,10 @@ interface IProposal extends Document {
 	placardIdList: Array<Types.ObjectId>;
 }
 interface IProposalDocument extends IProposal {
-	pushPlan: (id: Types.ObjectId) => void;
+  pushPlan: (id: Types.ObjectId) => void;
   removePlan: (id: Types.ObjectId) => void;
-	addNowBuyers: () => void;
-	addNowPrice: (number) => void;
-
+  addNowBuyers: () => void;
+  addNowPrice: (number) => void;
 }
 
 export {

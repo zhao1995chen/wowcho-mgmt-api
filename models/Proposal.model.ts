@@ -1,8 +1,8 @@
 import { Schema,model } from 'mongoose'
-import { IProposal } from '../interfaces/Proposal.interface'
+import { IProposalDocument } from '../interfaces/Proposal.interface'
 import { v4 as uuidv4 } from 'uuid'
 
-const ProposalSchema = new Schema<IProposal>(
+const ProposalSchema = new Schema<IProposalDocument>(
   {
     ownerId: {
       type: Schema.Types.ObjectId,
@@ -107,7 +107,7 @@ ProposalSchema.methods.addNowPrice = function(Price:number) {
   return this.save()
 }
 
-const Proposal = model<IProposal>('proposal', ProposalSchema)
+const Proposal = model<IProposalDocument>('proposal', ProposalSchema)
 
 export {
   Proposal,
