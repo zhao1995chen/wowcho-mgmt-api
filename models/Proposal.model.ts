@@ -27,7 +27,8 @@ const ProposalSchema = new Schema<IProposal>(
       required: [ true, '募資活動名稱必填' ]
     }, 
     category: {
-      type: String,
+      type: Number,
+      enum: [0, 1, 2, 3, 4, 5, 6],
       required: [ true, '募資活動分類必填' ]
     },
     summary: {
@@ -45,7 +46,7 @@ const ProposalSchema = new Schema<IProposal>(
     nowPrice: {
       type: Number,
     },
-    starTime: {
+    startTime: {
       type: Number,
       required: [ true, '募資活動開始時間必填' ]
     },
@@ -64,13 +65,53 @@ const ProposalSchema = new Schema<IProposal>(
     status: {
       type: Number,
       default: 1
-    }
+    },
+    // 關聯
+    planIdList:[
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'plan',
+      }
+    ],
+    faqIdList:  [{
+      type: Schema.Types.ObjectId,
+      ref: 'faq'
+    }],
+    promiseId: [{
+      type: Schema.Types.ObjectId,
+      ref: 'promise'
+    }],
   },
   {
     versionKey: false, // 其實用不到
     timestamps: true // 其實用不到
   }
 )
+
+// 新增方案 id 至募資活列表
+ProposalSchema.methods.pushPlan = function(id) {
+  this.planIdList.push(id)
+  return this.save()
+}
+
+// 移除方案 id 
+ProposalSchema.methods.removePlan = function(id) {
+  const index = this.planIdList.findIndex(item => item === id)
+  this.planIdList.splice(index,1)
+  return this.save()
+}
+
+// 購買時增加當前購買數
+ProposalSchema.methods.addNowBuyers = function() {
+  this.nowBuyers += 1
+  return this.save()
+}
+
+// 購買時增加當前募資總金額
+ProposalSchema.methods.addNowPrice = function(Price:number) {
+  this.nowPrice += Price
+  return this.save()
+}
 
 const Proposal = model<IProposal>('proposal', ProposalSchema)
 
