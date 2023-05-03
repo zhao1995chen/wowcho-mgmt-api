@@ -1,11 +1,28 @@
 import { Response } from 'express'
-import { HEADERS } from '../const'
+import { ERROR, HEADERS } from '../const'
 
-export const errorHandler = (res: Response, e?: any) => {
-  res.writeHead(404, HEADERS)
-  res.write(JSON.stringify({
-    status: 'Failed',
-    message: e?.message || e
-  }))
-  res.end()
+export interface IError {
+  code?: number
+  message: string
+  fieldName?: string
+  fieldValue?: string
+}
+
+export const errorHandler = (res: Response, e: IError) => {
+  const { code, message, fieldName, fieldValue } = e
+
+  // key replace
+  if (message) {
+    if (message.includes('fieldName') && fieldName) message.replace('fileName', fieldName)
+    if (message.includes('fieldValue') && fieldValue) message.replace('fileValue', fieldName)
+  } else {
+    message.replace(null, ERROR.GENERAL)
+  }
+
+  res.set(HEADERS).status(code || 400).send(
+    JSON.stringify({
+      status: 'Failed',
+      message: message
+    })
+  ).end()
 }

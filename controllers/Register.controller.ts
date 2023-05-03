@@ -28,11 +28,15 @@ export const RegisterController = {
       // console.log('hash', hashPassword)
 
       await Register.create({
+      // const user = await Register.create({
         account,
         email,
+        name: account,
+        username: account,
         password: hashPassword
       })
-      
+      // console.log('user', user)
+
       // 回傳 200 成功
       successHandler(res)
     } catch(e) {
