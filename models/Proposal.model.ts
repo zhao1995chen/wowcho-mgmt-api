@@ -12,10 +12,12 @@ function checkStringNotBlank(value: string): boolean {
 }
 
 // 檢查給定的時間戳是否大於當前時間
-function checkGreaterCurrentTime(value: number): boolean {
+function checkGreaterCurrentTimeOrNull(value: number | null): boolean {
+  if (value === null) {
+    return true
+  }
   return value > Date.now()
 }
-
 // 檢查僅能大於 0 以上數字
 function numberIsGreaterThanZero(value: number): boolean {
   return value > 0
@@ -104,9 +106,10 @@ const ProposalSchema = new Schema<IProposalDocument>(
     },
     endTime: {
       type: Number,
-      required: [ true, '募資活動結束時間必填' ],
+      default:null,
+      // required: [ true, '募資活動結束時間必填' ],
       validate: {
-        validator :checkGreaterCurrentTime,
+        validator :checkGreaterCurrentTimeOrNull,
         message: '僅能超過當前時間'
       },
     },
