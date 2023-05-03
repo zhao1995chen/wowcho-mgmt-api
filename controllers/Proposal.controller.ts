@@ -47,9 +47,10 @@ export const ProposalController = {
       const haveId = ProposalController.haveId(id)
       if(haveId) throw haveId
       // 募資活動網址重複
-      const updateDuplicate = await ProposalController.updateDuplicate(customizedUrl,id).catch(() => { 
-        throw { message: '募資活動 ID 錯誤' }
-      })
+      const updateDuplicate = await ProposalController.updateDuplicate(customizedUrl,id)
+        .catch(() => { 
+          throw { message: '找不到相對應的募資活動' }
+        })
       if (updateDuplicate) throw updateDuplicate
       
       // 檢查開始時間、結束時間
@@ -61,7 +62,7 @@ export const ProposalController = {
         upsert: false, // 如果沒找到匹配的文檔，不要創建新文檔
         runValidators: true, // 觸發 Schema 驗證
       })
-      if (!proposal) throw { message: '募資活動 ID 錯誤' }
+      if (!proposal) throw { message: '找不到相對應的募資活動' }
 
       successHandler(res, proposal)
     } catch(e){
@@ -104,7 +105,10 @@ export const ProposalController = {
     try {
       const id = req.query.id // 指定 proposal id
       const proposal = await Proposal.findOne<IProposal>({ _id:id })
-      if (!proposal) throw '募資活動 ID 錯誤'
+        .catch(() => {
+          throw { message: '找不到相對應的募資活動' }
+        })
+      if (!proposal) throw '找不到相對應的募資活動'
       // 資料擁有者 和 JWT 使用者不匹配
       if (proposal.ownerId.toString() !== req.body._id) throw '無權查看此募資活動'
       successHandler(res, proposal)
@@ -117,15 +121,16 @@ export const ProposalController = {
   // 刪除
   async delete (req: Request, res: Response) {
     try {
-      if (!req.body) throw { message: '請輸入修改資料' }
+      if (!req.body) throw { message: '請輸入刪除資料' }
       // 檢查回傳回來刪除 id
       const arrayId = req.body.id
       const checkArrayId = ProposalController.checkArrayId(arrayId)
       if(checkArrayId) throw checkArrayId
       // 確認資料庫是否有刪除 id
-      const proposalList = await Proposal.find({ _id: { $in: arrayId } }).catch(() => {
-        throw { message: '找不到相對應的募資活動' }
-      })
+      const proposalList = await Proposal.find({ _id: { $in: arrayId } })
+        .catch(() => {
+          throw { message: '找不到相對應的募資活動' }
+        })
       if (!proposalList) throw { message: '找不到相對應的募資活動' }
       // 刪除資料
       await Proposal.deleteMany({ _id: { $in: arrayId } })
