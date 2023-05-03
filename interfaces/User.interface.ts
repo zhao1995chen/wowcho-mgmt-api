@@ -18,6 +18,7 @@ interface IUser extends Document {
   instagram?: string // IG 網址
   youtube?: string // YT 網址
   tokenList?: Array<string> // 驗證
+  __t: string
 }
 
 export {
