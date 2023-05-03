@@ -40,8 +40,11 @@ export const ProposalController = {
   // 編輯
   async update(req: Request, res: Response) {
     try {
-      const { id, ownerId, imageUrl, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, planIdList, messageIdList, faqIdList, promiseId } =  req.body 
-      const userProposal = { ownerId, imageUrl, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, planIdList, messageIdList, faqIdList, promiseId }
+      const { id = '', ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, promiseId } =  req.body 
+      const userProposal = { ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, promiseId }
+      // 確認是否無 id
+      const checkId = ProposalController.checkId(id)
+      if(checkId) throw checkId
       // 募資活動網址重複
       const updateDuplicate = await ProposalController.updateDuplicate(customizedUrl,id)
       if (updateDuplicate) throw updateDuplicate
@@ -63,6 +66,11 @@ export const ProposalController = {
       errorHandler(res, e)
     }
   },
+  checkId(id:string) {
+    if (id.length < 1) {
+      return '募資活動 ID 錯誤'
+    }
+  },
   // 檢查重複，同募資提案，網址可維持一致
   async updateDuplicate(customizedUrl, id: string) {
     const check = await Proposal.findOne({
@@ -80,7 +88,7 @@ export const ProposalController = {
       const pageSize = Number(req.query.pageSize) || 10 // 每頁顯示幾筆資料
       const page = Number(req.query.page) || 1 // 目前頁數
       const proposalList = await Proposal.find({ ownerId: req.body._id })
-        .select('_id imageUrl name customizedUrl category summary targetPrice nowPrice nowBuyers startTime endTime updatedAt createdAt')
+        .select('_id image name customizedUrl category summary targetPrice nowPrice nowBuyers startTime endTime updatedAt createdAt')
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
       successHandler(res, proposalList)
@@ -106,24 +114,30 @@ export const ProposalController = {
   // 刪除
   async delete (req: Request, res: Response) {
     try {
-    // 檢查所有文檔是否存在
-      const array = req.body.id
-      console.log(array)
+      // 檢查回傳回來刪除 id
+      const arrayId = req.body.id
+      const checkArrayId = ProposalController.checkArrayId(arrayId)
+      if(checkArrayId) throw checkArrayId
       // 確認資料庫是否有刪除 id
-      const proposalList = await Proposal.find({ _id: { $in: array } })
+      const proposalList = await Proposal.find({ _id: { $in: arrayId } })
       if (!proposalList) throw '找不到相對應的募資活動'
       // 刪除資料
-      await Proposal.deleteMany({ _id: { $in: array } })
+      await Proposal.deleteMany({ _id: { $in: arrayId } })
       successHandler(res)
     } catch(e){
       errorHandler(res, e)
+    }
+  },
+  checkArrayId(arrayId = []) {
+    if (arrayId.length === 0) {
+      return '刪除 ID 錯誤'
     }
   },
   options(req: Request, res: Response) {
     successHandler(res)
   },
   overTime(value) {
-    const { starTime, endTime } = value
-    if ( starTime >= endTime ) return '活動開始時間不可晚於結束時間'
+    const { startTime, endTime } = value
+    if ( startTime >= endTime ) return '活動開始時間不可晚於結束時間'
   }
 }

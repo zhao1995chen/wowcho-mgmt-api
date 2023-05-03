@@ -1,21 +1,33 @@
 import { Document, Types } from 'mongoose'
 
-
-enum ageLimit {
+enum eAgeLimit {
   notLimited = 0, // 無限制
 	r18 = 1// 18 禁
+}
+enum eCategory {
+  Art = 0,
+  Society = 1,
+  Education = 2,
+  VideoGame = 3,
+  Technology = 4,
+  Leisure = 5,
+  Fashion = 6,
+}
+enum eStatus {
+	draft = 0, // 草稿
+	already = 1 // 上架
 }
 
 interface IProposal extends Document {
   _id?: string
 	//圖片網址
-  imageUrl:string, 
+  image:string, 
 	//影片
 	video:string,
 	//活動名稱
 	name:string,
 	//活動分類
-  category: 0 | 1 | 2 | 3 | 4 | 5 | 6 // 提案類別
+  category: eCategory
 	//活動簡介
 	summary:string,
 	//活動描述
@@ -31,14 +43,13 @@ interface IProposal extends Document {
 	//募資結束時間
 	endTime: number | null,
 	// 年齡限制
-	ageLimit:number | null,
+	ageLimit:eAgeLimit,
 	// 客製化 URL
 	customizedUrl:string
 	// 詳細內容
 	contentsId: string
 	// 狀態 0 = 草稿，前台看不到 1 = 上架
-	status: number
-
+	status: eStatus
 	// 關聯
 	// 提案人
 	ownerId: Types.ObjectId;
@@ -62,5 +73,7 @@ interface IProposalDocument extends IProposal {
 export {
   IProposalDocument,
   IProposal,
-  ageLimit
+  eAgeLimit,
+  eCategory,
+  eStatus
 }
