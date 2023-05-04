@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { GetSignedUrlConfig } from '../interfaces/Upload.interface'
 import { errorHandler } from '../services/errorHandler'
 import { successHandler } from '../services/successHandler'
+import { ERROR } from '../const'
 
 export const UploadController = {
   async upload(req: Request, res: Response) {
@@ -32,7 +33,7 @@ export const UploadController = {
       })
 
       blobStream.on('error',  () => {
-        throw '上傳失敗'
+        throw { message: ERROR.OPERATION_FAILED }
       })
 
       // 實際寫入檔案的執行
