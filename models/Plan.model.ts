@@ -1,35 +1,6 @@
 import { Schema,model } from 'mongoose'
 import { IPlanDocument } from '../interfaces/Plan.interface'
-
-// 確認為網址正則
-// eslint-disable-next-line no-useless-escape
-const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-
-// 檢查是否為空白字串
-function checkStringNotBlank(value: string): boolean {
-  return value.trim().length > 0
-}
-
-// 檢查給定的時間戳是否大於當前時間
-function checkNumOrNull(value: number | null): boolean {
-  if (value === null) {
-    return true
-  }
-  return value > 0
-}
-
-// 檢查給定的時間戳是否大於當前時間
-function checkGreaterCurrentTimeOrNull(value: number | null): boolean {
-  if (value === null) {
-    return true
-  }
-  return value > Date.now()
-}
-
-// 檢查不可數值不可大於 0 
-function checkNumberIsGreaterThanZero(value: number): boolean {
-  return value > 0
-}
+import { urlRegex, checkStringNotBlank,  checkGreaterCurrentTimeOrNull, numberIsGreaterThanZero, checkNumIsGreaterThanZeroOrNull } from '../method/model.method'
 
 // 規格
 const specificationSchema = new Schema({
@@ -90,7 +61,7 @@ const PlanSchema = new Schema<IPlanDocument>(
       type: Number,
       default: null,
       validate: {
-        validator :checkNumOrNull,
+        validator :checkNumIsGreaterThanZeroOrNull,
         message: '原價不可小於 0'
       },
     },
@@ -98,7 +69,7 @@ const PlanSchema = new Schema<IPlanDocument>(
       type: Number,
       required: [ true, '募資方案實際價格必填' ],
       validate: {
-        validator :checkNumberIsGreaterThanZero,
+        validator :numberIsGreaterThanZero,
         message: '實際價格不可小於 0'
       },
     },
@@ -106,7 +77,7 @@ const PlanSchema = new Schema<IPlanDocument>(
       type: Number,
       default: null,
       validate: {
-        validator :checkNumOrNull,
+        validator :checkNumIsGreaterThanZeroOrNull,
         message: '原價不可小於 0'
       },
     },

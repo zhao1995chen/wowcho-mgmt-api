@@ -87,7 +87,12 @@ export const PlanController = {
         .catch(() => {
           throw { message: '找不到相對應的募資活動' }
         })
-      successHandler(res, planList)
+      const totalCount = await Plan.countDocuments({ proposalId })
+      const data = {
+        list: planList,
+        totalCount:totalCount
+      }
+      successHandler(res, data)
     } catch(e) {
       errorHandler(res, e)
     }
