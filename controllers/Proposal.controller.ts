@@ -95,7 +95,12 @@ export const ProposalController = {
         .select('_id image name customizedUrl category summary targetPrice nowPrice nowBuyers startTime endTime updatedAt createdAt')
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
-      successHandler(res, proposalList)
+      const totalCount = await Proposal.countDocuments({ ownerId: req.body._id })
+      const data = {
+        list: proposalList,
+        totalCount:totalCount
+      }
+      successHandler(res, data)
     } catch(e) {
       errorHandler(res, e)
     }

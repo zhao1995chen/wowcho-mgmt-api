@@ -1,37 +1,8 @@
 import { Schema,model } from 'mongoose'
 import { IProposalDocument, eAgeLimit, eCategory, eStatus } from '../interfaces/Proposal.interface'
 import { v4 as uuidv4 } from 'uuid'
+import { urlRegex, checkStringNotBlank,  checkGreaterCurrentTimeOrNull, numberIsGreaterThanZero } from '../method/model.method'
 
-// 確認為網址正則
-// eslint-disable-next-line no-useless-escape
-const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-
-// 檢查是否為空白字串
-function checkStringNotBlank(value: string): boolean {
-  return value.trim().length > 0
-}
-
-// 檢查給定的時間戳是否大於當前時間
-function checkGreaterCurrentTimeOrNull(value: number | null): boolean {
-  if (value === null) {
-    return true
-  }
-  return value > Date.now()
-}
-// 檢查僅能大於 0 以上數字
-function numberIsGreaterThanZero(value: number): boolean {
-  return value > 0
-}
-
-// function validateAndConvertToNumber(value) {
-//   // 如果值不是數字，拋出錯誤
-//   if (typeof value !== 'number' && isNaN(Number(value))) {
-//     throw new Error('僅能輸入數字')
-//   }
-
-//   // 將值轉換為數字
-//   return Number(value)
-// }
 
 const ProposalSchema = new Schema<IProposalDocument>(
   {
@@ -43,7 +14,7 @@ const ProposalSchema = new Schema<IProposalDocument>(
       type: String,
       required: [ true, '募資活動預覽圖必填' ],
       validate: {
-        validator: function (value) {
+        validator (value) {
           return urlRegex.test(value)
         },
         message: '僅能輸入網址'
@@ -63,8 +34,11 @@ const ProposalSchema = new Schema<IProposalDocument>(
     }, 
     category: {
       type: Number,
-      enum: eCategory,
-      required: [ true, '募資活動分類必填' ]
+      required: [ true, '募資活動分類必填' ],
+      enum: {
+        values: Object.values(eCategory),
+        message: '類別必須是數字 `0` 至 `6`'
+      },
     },
     summary: {
       type: String,
@@ -86,7 +60,6 @@ const ProposalSchema = new Schema<IProposalDocument>(
     targetPrice: {
       type: Number,
       required: [ true, '募資活動達標金額必填' ],
-      // set: validateAndConvertToNumber,
       validate: {
         validator: numberIsGreaterThanZero,
         message: '僅能輸入零以上的數字'
@@ -107,7 +80,6 @@ const ProposalSchema = new Schema<IProposalDocument>(
     endTime: {
       type: Number,
       default:null,
-      // required: [ true, '募資活動結束時間必填' ],
       validate: {
         validator :checkGreaterCurrentTimeOrNull,
         message: '僅能超過當前時間'
@@ -116,7 +88,10 @@ const ProposalSchema = new Schema<IProposalDocument>(
     ageLimit: {
       type: Number,
       default: 0,
-      enum: eAgeLimit
+      enum: {
+        values: Object.values(eAgeLimit),
+        message: '年齡限制必須是數字 `0` 或 `1`'
+      },
     },
     customizedUrl: {
       type: String,
