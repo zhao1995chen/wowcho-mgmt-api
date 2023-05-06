@@ -29,14 +29,14 @@ export const ProfileController = {
 
       // 驗證資料
       const validateError = payload.validateSync()
-      if (validateError) throw validateError
+      if (validateError) throw { message: validateError }
 
       // 確認 email 是否變更
       const oldProfileData = await User.findById(_id)
       if (payload.email !== oldProfileData.email) {
         // 確認沒有重複的 email
         const duplicate = await ProfileController.duplicate(payload)
-        if (duplicate) throw duplicate
+        if (duplicate) throw { message: duplicate }
       }
 
       await User.findOneAndUpdate({ _id }, payload)
