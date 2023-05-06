@@ -11,11 +11,10 @@ export interface IError {
 export const errorHandler = (res: Response, e: IError) => {
   const { code, fieldName, fieldValue } = e
   let { message } = e
-
   // key replace
   if (message) {
-    if (message.includes('fieldName') && fieldName) message.replace('fileName', fieldName)
-    if (message.includes('fieldValue') && fieldValue) message.replace('fileValue', fieldName)
+    if (message.includes('fieldName') && fieldName) message = message.replace('fieldName', fieldName)
+    if (message.includes('fieldValue') && fieldValue) message = message.replace('filedValue', fieldName)
   } else {
     message = ERROR.GENERAL
   }
