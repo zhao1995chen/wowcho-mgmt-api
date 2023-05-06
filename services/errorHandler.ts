@@ -9,20 +9,20 @@ export interface IError {
 }
 
 export const errorHandler = (res: Response, e: IError) => {
-  const { code, message, fieldName, fieldValue } = e
-
+  const { code, fieldName, fieldValue } = e
+  let { message } = e
   // key replace
   if (message) {
-    if (message.includes('fieldName') && fieldName) message.replace('fileName', fieldName)
-    if (message.includes('fieldValue') && fieldValue) message.replace('fileValue', fieldName)
+    if (message.includes('fieldName') && fieldName) message = message.replace('fieldName', fieldName)
+    if (message.includes('fieldValue') && fieldValue) message = message.replace('filedValue', fieldName)
   } else {
-    message.replace(null, ERROR.GENERAL)
+    message = ERROR.GENERAL
   }
 
   res.set(HEADERS).status(code || 400).send(
     JSON.stringify({
       status: 'Failed',
-      message: message
+      message
     })
   ).end()
 }

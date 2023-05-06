@@ -1,6 +1,6 @@
 // 確認為網址正則
 // eslint-disable-next-line no-useless-escape
-export const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
+export const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)/
 
 // 檢查是否為空白字串
 export function checkStringNotBlank(value: string): boolean {

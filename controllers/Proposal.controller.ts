@@ -3,6 +3,7 @@ import { successHandler } from '../services/successHandler'
 import { errorHandler } from '../services/errorHandler'
 import { Proposal } from '../models/Proposal.model'
 import { IProposal } from '../interfaces/Proposal.interface'
+import { ERROR } from '../const'
 
 export const ProposalController = {
   // 新增
@@ -33,14 +34,13 @@ export const ProposalController = {
   },
   async createDuplicate(value: IProposal) {
     const { customizedUrl } = value
-    if (await Proposal.exists({ customizedUrl })) return { message: '專案網址已使用' }
+    if (await Proposal.exists({ customizedUrl })) return { fieldName: '專案網址', message: ERROR.DUPLICATE }
     return
   },
-
   // 編輯
   async update(req: Request, res: Response) {
     try {
-      if (!req.body) throw { message: '請輸入修改資料' }
+      if (!req.body) throw { message: ERROR.GENERAL }
       const { id = '', ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, promiseId } =  req.body 
       const userProposal = { ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, promiseId }
       // 確認是否無 id
@@ -49,8 +49,8 @@ export const ProposalController = {
       // 募資活動網址重複
       const updateDuplicate = await ProposalController.updateDuplicate(customizedUrl,id)
         .catch(() => { 
-          throw { message: '找不到相對應的募資活動' }
-        })
+          throw { fieldName: '募資活動', message: ERROR.INVALID }
+        }) 
       if (updateDuplicate) throw updateDuplicate
       
       // 檢查開始時間、結束時間
@@ -62,7 +62,7 @@ export const ProposalController = {
         upsert: false, // 如果沒找到匹配的文檔，不要創建新文檔
         runValidators: true, // 觸發 Schema 驗證
       })
-      if (!proposal) throw { message: '找不到相對應的募資活動' }
+      if (!proposal) throw  { fieldName: '募資活動', message: ERROR.INVALID }
 
       successHandler(res, proposal)
     } catch(e){
@@ -71,7 +71,7 @@ export const ProposalController = {
   },
   haveId(id:string) {
     if (id.length === 0) {
-      return { message: '請輸入募資活動 ID' }
+      return { message: ERROR.GENERAL }
     }
     return
   },
@@ -82,7 +82,7 @@ export const ProposalController = {
       _id: { $ne: id }, // 確保找到的文檔不是當前文檔
     })
 
-    if (check) return { message: '專案網址已使用' }
+    if (check) return { fieldName: '專案網址', message: ERROR.DUPLICATE }
     return
   },
 
@@ -111,11 +111,11 @@ export const ProposalController = {
       const id = req.query.id // 指定 proposal id
       const proposal = await Proposal.findOne<IProposal>({ _id:id })
         .catch(() => {
-          throw { message: '找不到相對應的募資活動' }
+          throw  { fieldName: '募資活動', message: ERROR.INVALID }
         })
-      if (!proposal) throw '找不到相對應的募資活動'
+      if (!proposal) throw  { fieldName: '募資活動', message: ERROR.INVALID }
       // 資料擁有者 和 JWT 使用者不匹配
-      if (proposal.ownerId.toString() !== req.body._id) throw '無權查看此募資活動'
+      if (proposal.ownerId.toString() !== req.body._id) throw { message: ERROR.PERMISSION_DENIED }
       successHandler(res, proposal)
     }
     catch(e) {
@@ -126,7 +126,7 @@ export const ProposalController = {
   // 刪除
   async delete (req: Request, res: Response) {
     try {
-      if (!req.body) throw { message: '請輸入刪除資料' }
+      if (!req.body) throw { message: ERROR.GENERAL }
       // 檢查回傳回來刪除 id
       const arrayId = req.body.id
       const checkArrayId = ProposalController.checkArrayId(arrayId)
@@ -134,9 +134,9 @@ export const ProposalController = {
       // 確認資料庫是否有刪除 id
       const proposalList = await Proposal.find({ _id: { $in: arrayId } })
         .catch(() => {
-          throw { message: '找不到相對應的募資活動' }
+          throw { fieldName: '募資活動', message: ERROR.INVALID }
         })
-      if (!proposalList) throw { message: '找不到相對應的募資活動' }
+      if (!proposalList) throw { fieldName: '募資活動', message: ERROR.INVALID }
       // 刪除資料
       await Proposal.deleteMany({ _id: { $in: arrayId } })
       successHandler(res)
@@ -146,7 +146,7 @@ export const ProposalController = {
   },
   checkArrayId(arrayId = []) {
     if (arrayId.length === 0) {
-      return { message: '刪除 ID 錯誤' }
+      return { message: ERROR.GENERAL }
     }
     return
   },
@@ -158,7 +158,7 @@ export const ProposalController = {
     if ( endTime !== null ) {
       // 開始時間 >= 結束時間
       if ( startTime >= endTime ) {
-        return { message: '專案網址已使用' }
+        return { message: '活動起始時間不可晚於活動結束時間' }
       }
       return 
     }

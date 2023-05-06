@@ -15,14 +15,16 @@ const METHOD = {
 
 const ERROR = {
   // 如果有其他 error message 需求繼續往下新增
-  GENERAL: 'Please vheck your data.',
-  CORS: 'CORS',
-  PERMISSION_DENIED: 'Permission denied.',
-  REQUIRED: 'fieldName is required.',
-  NOT_CHANGED: 'fieldName is not changed.',
-  ERROR_FORMAT: 'filedName does not match the format.',
-  DUPLICATE: 'fieldValue is already taken.',
-  INVALID: 'fieldName is invalid'
+  GENERAL: '請確認你的資料是否正確',
+  CORS: 'CORS 跨域問題',
+  PERMISSION_DENIED: '請登入後操作',
+  REQUIRED: 'fieldName 必填',
+  NOT_CHANGED: 'fieldName 沒有改變',
+  ERROR_FORMAT: 'filedName 不符合格式',
+  DUPLICATE: 'fieldName 已被使用',
+  INVALID: 'fieldName 不存在',
+  WRONG_DATA: 'fieldName 錯誤',
+  OPERATION_FAILED: '操作失敗'
 }
 
 const HASH_TIME = 12
