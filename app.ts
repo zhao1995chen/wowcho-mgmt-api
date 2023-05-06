@@ -11,7 +11,6 @@ import { userRouter } from './routes/User.route'
 import { proposalRouter } from './routes/Proposal.route'
 
 const app = express()
-
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(express.json())
 app.use(cors())
