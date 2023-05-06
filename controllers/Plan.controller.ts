@@ -5,6 +5,8 @@ import { Plan } from '../models/Plan.model'
 import { IPlan } from '../interfaces/Plan.interface'
 import { Proposal } from '../models/Proposal.model'
 import { Types } from 'mongoose'
+import { ERROR } from '../const'
+
 export const PlanController = {
   // 新增方案 
   async create(req: Request, res: Response) {
@@ -26,8 +28,11 @@ export const PlanController = {
 
       // 尋找募資專案是否存在
       const checkProposal = await PlanController.checkProposal(proposalId)
+        .catch(()=>{
+          throw {  message:ERROR.GENERAL }
+        })
       // 若不存在跳錯
-      if (!checkProposal) throw { message: '找不到相對應的募資活動' }
+      if (!checkProposal) throw { fieldName: '募資活動', message: ERROR.INVALID }
 
       // 驗證都通過，儲存新增 plan 至資料庫
       const savedPlan = await newPlan.save()
@@ -41,7 +46,7 @@ export const PlanController = {
   // 編輯
   async update(req: Request, res: Response) {
     try {
-      if (!req.body) throw { message: '請輸入修改資料' }
+      if (!req.body) throw { message: ERROR.GENERAL }
       // 確認募資活動、募資方案 id
       const checkId = PlanController.checkId(req.body)
       if(checkId) throw checkId
@@ -63,9 +68,9 @@ export const PlanController = {
           runValidators: true, // 觸發 Schema 驗證
         }
       ).catch(()=>{
-        throw { message: '找不到相對應的募資方案' }
+        throw { fieldName: '募資方案', message: ERROR.INVALID }
       })
-      if (!plan) throw  { message: '找不到相對應的募資方案' }
+      if (!plan) throw { fieldName: '募資方案', message: ERROR.INVALID }
       successHandler(res, plan)
 
     } catch(e){
@@ -78,14 +83,14 @@ export const PlanController = {
       const pageSize = Number(req.query.pageSize) || 10 // 每頁顯示幾筆資料
       const page = Number(req.query.page) || 1 // 目前頁數
       const proposalId = req.query.proposalId // 募資活動 id
-      if (!proposalId) throw { message: '找不到相對應的募資活動' }
+      if (!proposalId) throw { fieldName: '募資活動', message: ERROR.INVALID }
 
       const planList = await Plan.find({ proposalId })
         .select('_id proposalId image name summary actualPrice originalPrice quantity nowBuyers pickupDate')
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
         .catch(() => {
-          throw { message: '找不到相對應的募資活動' }
+          throw { fieldName: '募資活動', message: ERROR.INVALID }
         })
       const totalCount = await Plan.countDocuments({ proposalId })
       const data = {
@@ -106,10 +111,10 @@ export const PlanController = {
       // 找符合 募資活動、募資方案 id
       const plan = await Plan.findOne({ _id:req.query.id, proposalId: req.query.proposalId })
         .catch(()=>{
-          throw { message: '找不到相對應的募資方案' }
+          throw { fieldName: '募資方案', message: ERROR.INVALID }
         })
       // 募資方案 id、 募資活動 id 必須存在
-      if (!plan) throw { message: '找不到相對應的募資方案' }
+      if (!plan) throw { fieldName: '募資方案', message: ERROR.INVALID }
 
       successHandler(res, plan)
     } catch(e) {
@@ -126,9 +131,9 @@ export const PlanController = {
       const plan = await Plan.findOne({ _id:req.query.id, proposalId: req.query.proposalId })
         .select('specification')
         .catch(()=>{
-          throw { message: '找不到相對應的募資方案' }
+          throw { fieldName: '募資方案', message: ERROR.INVALID }
         })
-      if (!plan) throw '找不到相對應的募資方案'
+      if (!plan) throw { fieldName: '募資方案', message: ERROR.INVALID }
 
       successHandler(res, plan)
     } catch(e) {
@@ -138,7 +143,7 @@ export const PlanController = {
   // 刪除
   async delete (req: Request, res: Response) {
     try {
-      if (!req.body) throw { message: '請輸入刪除資料' }
+      if (!req.body) throw { message: ERROR.GENERAL }
 
       // 檢查所有文檔是否存在
       const proposalId = req.body.proposalId
@@ -146,14 +151,14 @@ export const PlanController = {
       // 確認資料庫是否有刪除 id
       const planList = await Plan.find({ _id: { $in: planArray } })
         .catch(() => {
-          throw { message: '找不到相對應的募資方案' }
+          throw { fieldName: '募資方案', message: ERROR.INVALID }
         })
-      if (!planList) throw '找不到相對應的募資方案'
+      if (!planList) throw { fieldName: '募資方案', message: ERROR.INVALID }
       const proposal = await Proposal.findById({ _id: proposalId })
         .catch(() => {
-          throw { message: '找不到相對應的募資活動' }
+          throw { fieldName: '募資活動', message: ERROR.INVALID }
         })
-      if (!proposal) throw '找不到相對應的募資活動'
+      if (!proposal) throw { fieldName: '募資活動', message: ERROR.INVALID }
 
       // 刪除募資方案資料
       proposal.removePlan(planArray)
@@ -174,8 +179,8 @@ export const PlanController = {
 
   checkId(value) {
     const { proposalId = '', id = '' } = value
-    if (proposalId.length === 0) return { message: '找不到相對應的募資活動' }
-    if (id.length === 0) return { message: '找不到相對應的募資方案' }
+    if (proposalId.length === 0) return { fieldName: '募資活動', message: ERROR.INVALID }
+    if (id.length === 0) return { fieldName: '募資方案', message: ERROR.INVALID }
     return
   }
 
