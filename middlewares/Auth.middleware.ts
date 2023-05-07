@@ -28,8 +28,17 @@ const isAuth = async (req: Request, res: Response, next: any) => {
 
     // 驗證 token 值正確
     jwt.verify(token, process.env.JWT_SECRET, (e: Error, payload: any) => {
+      // console.log(e)
+      if (e instanceof jwt.NotBeforeError) {
+        throw { message: ERROR.TOKEN_NOT_BOFORE }
+      }
+      if (e instanceof jwt.TokenExpiredError) {
+        throw { message: ERROR.TOKEN_EXPIRED }
+      }
+      if (e instanceof jwt.JsonWebTokenError) {
+        throw { message: ERROR.TOKEN_MALFORMED}
+      } 
       if (e) {
-        // console.log(e)
         throw { message: e }
       }
 
