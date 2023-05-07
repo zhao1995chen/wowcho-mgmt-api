@@ -108,8 +108,16 @@ export const ProposalController = {
   // 獲得詳細資訊
   async get(req: Request, res: Response) {
     try {
+      let query = null
+
       const id = req.query.id // 指定 proposal id
-      const proposal = await Proposal.findOne<IProposal>({ _id:id })
+      const url = req.query.url
+      if (id !== undefined) {
+        query = {_id: id}
+      } else {
+        query = {customizedUrl: url }
+      }
+      const proposal = await Proposal.findOne<IProposal>(query)
         .catch(() => {
           throw  { fieldName: '募資活動', message: ERROR.INVALID }
         })
