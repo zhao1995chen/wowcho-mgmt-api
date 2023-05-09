@@ -41,8 +41,8 @@ export const ProposalController = {
   async update(req: Request, res: Response) {
     try {
       if (!req.body) throw { message: ERROR.GENERAL }
-      const { id = '', ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, promiseId } =  req.body 
-      const userProposal = { ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, promiseId }
+      const { id = '', ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, serviceContact, risksChallenge, returnGoods } =  req.body 
+      const userProposal = { ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, serviceContact, risksChallenge, returnGoods }
       // 確認是否無 id
       const haveId = ProposalController.haveId(id)
       if(haveId) throw haveId
