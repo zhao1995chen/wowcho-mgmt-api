@@ -46,8 +46,6 @@ interface IProposal extends Document {
 	ageLimit:eAgeLimit,
 	// 客製化 URL
 	customizedUrl:string
-	// 詳細內容
-	contentsId: string
 	// 狀態 0 = 草稿，前台看不到 1 = 上架
 	status: eStatus
 	// 關聯
