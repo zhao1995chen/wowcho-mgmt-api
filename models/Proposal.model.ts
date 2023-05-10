@@ -51,11 +51,11 @@ const ProposalSchema = new Schema<IProposalDocument>(
     },
     description: {
       type: String,
-      required: [ true, '募資活動詳細介紹必填' ],
-      validate: {
-        validator: checkStringNotBlank,
-        message: '不能為空'
-      },
+      // required: [ true, '募資活動詳細介紹必填' ],
+      // validate: {
+      //   validator: checkStringNotBlank,
+      //   message: '不能為空'
+      // },
     },
     targetPrice: {
       type: Number,
@@ -117,10 +117,22 @@ const ProposalSchema = new Schema<IProposalDocument>(
       type: Schema.Types.ObjectId,
       ref: 'faq'
     }],
-    promiseId: [{
-      type: Schema.Types.ObjectId,
-      ref: 'promise'
-    }],
+    // promiseId: [{
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'promise'
+    // }],
+    serviceContact: {
+      type: String,
+      default: '',
+    },
+    risksChallenge: {
+      type: String,
+      default: '',
+    },
+    returnGoods: {
+      type: String,
+      default: '',
+    },
   },
   {
     versionKey: false, // 其實用不到

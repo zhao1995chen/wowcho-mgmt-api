@@ -60,8 +60,11 @@ interface IProposal extends Document {
 	// 常見問答id列表
 	faqIdList: Array<Types.ObjectId>;
 	// 承諾與告示id列表
-	promiseId:Array<Types.ObjectId>;
+	// promiseId:Array<Types.ObjectId>;
 	placardIdList: Array<Types.ObjectId>;
+	serviceContact: string;
+	risksChallenge: string;
+	returnGoods: string;
 }
 interface IProposalDocument extends IProposal {
   pushPlan: (id: Types.ObjectId) => void;
