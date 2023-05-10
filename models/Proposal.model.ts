@@ -1,7 +1,7 @@
 import { Schema,model } from 'mongoose'
 import { IProposalDocument, eAgeLimit, eCategory, eStatus } from '../interfaces/Proposal.interface'
 import { v4 as uuidv4 } from 'uuid'
-import { urlRegex, checkStringNotBlank,  checkGreaterCurrentTimeOrNull, numberIsGreaterThanZero } from '../method/model.method'
+import { urlRegex, checkStringNotBlank, checkGreaterCurrentTime, checkGreaterCurrentTimeOrNull, numberIsGreaterThanZero } from '../method/model.method'
 
 
 const ProposalSchema = new Schema<IProposalDocument>(
@@ -15,7 +15,7 @@ const ProposalSchema = new Schema<IProposalDocument>(
       required: [ true, '募資活動預覽圖必填' ],
       validate: {
         validator (value) {
-          return urlRegex.test(value)
+          return value.match(urlRegex)
         },
         message: '僅能輸入網址'
       }
@@ -62,8 +62,8 @@ const ProposalSchema = new Schema<IProposalDocument>(
       required: [ true, '募資活動達標金額必填' ],
       validate: {
         validator: numberIsGreaterThanZero,
-        message: '僅能輸入零以上的數字'
-      },
+        message: '僅能輸入零以上的數字',
+      }
     },
     nowPrice: {
       type: Number,
@@ -73,8 +73,8 @@ const ProposalSchema = new Schema<IProposalDocument>(
       type: Number,
       required: [ true, '募資活動開始時間必填' ],
       validate: {
-        validator: numberIsGreaterThanZero,
-        message: '僅能輸入零以上的數字'
+        validator :checkGreaterCurrentTime,
+        message: '僅能超過當前時間'
       },
     },
     endTime: {
@@ -117,10 +117,24 @@ const ProposalSchema = new Schema<IProposalDocument>(
       type: Schema.Types.ObjectId,
       ref: 'faq'
     }],
-    promiseId: [{
-      type: Schema.Types.ObjectId,
-      ref: 'promise'
-    }],
+    messageIdList:[
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'message'
+      }
+    ],
+    serviceContact: {
+      type: String,
+      default: '',
+    },
+    risksChallenge: {
+      type: String,
+      default: '',
+    },
+    returnGoods: {
+      type: String,
+      default: '',
+    },
   },
   {
     versionKey: false, // 其實用不到

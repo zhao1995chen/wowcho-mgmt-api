@@ -46,8 +46,6 @@ interface IProposal extends Document {
 	ageLimit:eAgeLimit,
 	// 客製化 URL
 	customizedUrl:string
-	// 詳細內容
-	contentsId: string
 	// 狀態 0 = 草稿，前台看不到 1 = 上架
 	status: eStatus
 	// 關聯
@@ -60,8 +58,11 @@ interface IProposal extends Document {
 	// 常見問答id列表
 	faqIdList: Array<Types.ObjectId>;
 	// 承諾與告示id列表
-	promiseId:Array<Types.ObjectId>;
+	// promiseId:Array<Types.ObjectId>;
 	placardIdList: Array<Types.ObjectId>;
+	serviceContact: string;
+	risksChallenge: string;
+	returnGoods: string;
 }
 interface IProposalDocument extends IProposal {
   pushPlan: (id: Types.ObjectId) => void;
