@@ -50,6 +50,46 @@ export const SponsorController = {
       errorHandler(res, e)
     }
   },
+  // detail
+  async getDetail(req: Request, res: Response) {
+    try {
+      const { _id } = req.body
+      const sponsor = await Sponsor.findById(_id)
+
+      const order_info = {
+        id: sponsor._id,
+        // 需要關聯 proposal 表
+        proposalName: "超早鳥 - 潮到出水短T",
+        purchaserName: sponsor.recipientName,
+        memberNumber: '0000000001',
+        purchaseDate: sponsor.createTime,
+        planSpecification: sponsor.orderSpecification,
+        freight: sponsor.freight,
+        price: sponsor.totalMoney,
+        payment: sponsor.payWay,
+        orderStatus: sponsor.orderStatus,
+        transport: sponsor.logistics,
+        shipStatus: sponsor.shippingStatus,
+        pickupInformation: {
+          name: sponsor.recipientName,
+          phone: sponsor.recipientPhone,
+          marketName: sponsor.recipientShop,
+          pickupStore: sponsor.recipientShop,
+          pickupStoreNumber: sponsor.recipientShopId,
+          pickupMeans: sponsor.recipientWay,
+          shipNumber: sponsor.recipientTrackingId,
+          market: sponsor.note,
+        },
+        lastUpdateTime: sponsor.updateTime,
+      }
+
+      const data = order_info
+
+      successHandler(res, data)
+    } catch(e) {
+      errorHandler(res, e)
+    }
+  },
   options(req: Request, res: Response) {
     successHandler(res)
   }

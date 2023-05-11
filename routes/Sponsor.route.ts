@@ -6,3 +6,5 @@ import { SponsorController } from '../controllers/Sponsor.controller'
 export const sponsorRouter = express.Router()
 
 sponsorRouter.get('/', SponsorController.get)
+// detail
+sponsorRouter.get('/detail', SponsorController.getDetail)
