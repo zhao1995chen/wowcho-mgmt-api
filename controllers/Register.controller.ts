@@ -15,12 +15,12 @@ export const RegisterController = {
 
       // 驗證資料
       const validateError = newMember.validateSync()
-      if (validateError) throw validateError
+      if (validateError) throw { message: validateError }
 
       // console.log('register', req.body, newMember)
       // 確認沒有重複的 account 跟 email
       const duplicate = await RegisterController.duplicate(newMember)
-      if (duplicate) throw duplicate
+      if (duplicate) throw { message: duplicate }
       
       // 創建新會員
       const { account, email, password } = newMember
