@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose'
 interface IPlan extends Document {
   _id?: Types.ObjectId,
   // 募資活動(主表) id
-  proposalId: Types.ObjectId,
+  proposalUrl: string
 	//圖片網址
   image:string, 
 	//方案名稱

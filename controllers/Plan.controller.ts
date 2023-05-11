@@ -11,7 +11,7 @@ export const PlanController = {
   // 新增方案 
   async create(req: Request, res: Response) {
     try {
-      const proposalId = req.body.proposalId
+      const url = req.body.proposalUrl
       const newPlan:IPlan = new Plan({
         ...req.body,
         _id: new Types.ObjectId(),
@@ -27,7 +27,7 @@ export const PlanController = {
       }
 
       // 尋找募資專案是否存在
-      const checkProposal = await PlanController.checkProposal(proposalId)
+      const checkProposal = await PlanController.checkProposal(url)
         .catch(()=>{
           throw {  message:ERROR.GENERAL }
         })
@@ -51,8 +51,8 @@ export const PlanController = {
       const checkId = PlanController.checkId(req.body)
       if(checkId) throw checkId
       // 找符合 募資活動、募資方案 id
-      const { id, proposalId, image, name, summary, originalPrice, actualPrice, quantity, nowBuyers, pickupDate, toSponsor, specification, freightMainIsland, freightOuterIsland, freightOtherCountries } = req.body 
-      const userPlan = { proposalId, image, name, summary, originalPrice, actualPrice, quantity, nowBuyers, pickupDate, toSponsor, specification, freightMainIsland, freightOuterIsland, freightOtherCountries }
+      const { id, proposalUrl, image, name, summary, originalPrice, actualPrice, quantity, nowBuyers, pickupDate, toSponsor, specification, freightMainIsland, freightOuterIsland, freightOtherCountries } = req.body 
+      const userPlan = { proposalUrl, image, name, summary, originalPrice, actualPrice, quantity, nowBuyers, pickupDate, toSponsor, specification, freightMainIsland, freightOuterIsland, freightOtherCountries }
       
       // 確認原價是否有值，有值才做驗證
       if(originalPrice) {
@@ -60,7 +60,7 @@ export const PlanController = {
         if(actualPrice > originalPrice ) throw { message: '募資方案折扣價格不可大於原始價格' }
       }
       const plan = await Plan.findOneAndUpdate(
-        { _id:id, proposalId },
+        { _id:id, proposalUrl },
         userPlan,
         {
           new: true, // 返回更新後的文檔
@@ -82,17 +82,17 @@ export const PlanController = {
     try {
       const pageSize = Number(req.query.pageSize) || 10 // 每頁顯示幾筆資料
       const page = Number(req.query.page) || 1 // 目前頁數
-      const proposalId = req.query.proposalId // 募資活動 id
-      if (!proposalId) throw { fieldName: '募資活動', message: ERROR.INVALID }
+      const proposalUrl = req.query.proposalUrl // 募資活動 id
+      if (!proposalUrl) throw { fieldName: '募資活動', message: ERROR.INVALID }
 
-      const planList = await Plan.find({ proposalId })
-        .select('_id proposalId image name summary actualPrice originalPrice quantity nowBuyers pickupDate')
+      const planList = await Plan.find({ proposalUrl })
+        .select('_id proposalUrl image name summary actualPrice originalPrice quantity nowBuyers pickupDate')
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
         .catch(() => {
           throw { fieldName: '募資活動', message: ERROR.INVALID }
         })
-      const totalCount = await Plan.countDocuments({ proposalId })
+      const totalCount = await Plan.countDocuments({ proposalUrl })
       const data = {
         list: planList,
         totalCount:totalCount
@@ -109,7 +109,7 @@ export const PlanController = {
       const checkId = PlanController.checkId(req.query)
       if(checkId) throw checkId
       // 找符合 募資活動、募資方案 id
-      const plan = await Plan.findOne({ _id:req.query.id, proposalId: req.query.proposalId })
+      const plan = await Plan.findOne({ _id:req.query.id, proposalUrl: req.query.proposalUrl })
         .catch(()=>{
           throw { fieldName: '募資方案', message: ERROR.INVALID }
         })
@@ -128,7 +128,7 @@ export const PlanController = {
       const checkId = PlanController.checkId(req.query)
       if(checkId) throw checkId
       // 找符合 募資活動、募資方案 id
-      const plan = await Plan.findOne({ _id:req.query.id, proposalId: req.query.proposalId })
+      const plan = await Plan.findOne({ _id:req.query.id, proposalUrl: req.query.proposalUrl })
         .select('specification')
         .catch(()=>{
           throw { fieldName: '募資方案', message: ERROR.INVALID }
@@ -144,9 +144,9 @@ export const PlanController = {
   async delete (req: Request, res: Response) {
     try {
       if (!req.body) throw { message: ERROR.GENERAL }
-
+      console.log(req.body)
       // 檢查所有文檔是否存在
-      const proposalId = req.body.proposalId
+      const proposalUrl = req.body.proposalUrl
       const planArray = req.body.id
       // 確認資料庫是否有刪除 id
       const planList = await Plan.find({ _id: { $in: planArray } })
@@ -154,7 +154,7 @@ export const PlanController = {
           throw { fieldName: '募資方案', message: ERROR.INVALID }
         })
       if (!planList) throw { fieldName: '募資方案', message: ERROR.INVALID }
-      const proposal = await Proposal.findById({ _id: proposalId })
+      const proposal = await Proposal.findOne({ customizedUrl: proposalUrl })
         .catch(() => {
           throw { fieldName: '募資活動', message: ERROR.INVALID }
         })
@@ -172,14 +172,14 @@ export const PlanController = {
       errorHandler(res, e)
     }
   },
-  async checkProposal(id:string) {
-    const proposal = await Proposal.findById({ _id:id })
+  async checkProposal(url:string) {
+    const proposal = await Proposal.findOne({ customizedUrl:url })
     return proposal
   },
 
   checkId(value) {
-    const { proposalId = '', id = '' } = value
-    if (proposalId.length === 0) return { fieldName: '募資活動', message: ERROR.INVALID }
+    const { proposalUrl = '', id = '' } = value
+    if (proposalUrl.length === 0) return { fieldName: '募資活動', message: ERROR.INVALID }
     if (id.length === 0) return { fieldName: '募資方案', message: ERROR.INVALID }
     return
   }

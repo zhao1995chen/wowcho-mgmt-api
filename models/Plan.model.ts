@@ -27,16 +27,16 @@ const specificationSchema = new Schema({
 
 const PlanSchema = new Schema<IPlanDocument>(
   {
-    proposalId: {
-      type: Schema.Types.ObjectId,
-      required: [ true, '募資專案 ID 必填' ]
+    proposalUrl: {
+      type:String,
+      required: [ true, '募資活動專屬 URL 必填' ]
     },
     image: {
       type: String,
       required: [ true, '募資方案預覽圖必填' ],
       validate: {
         validator: function (value) {
-          return urlRegex.test(value)
+          return value.match(urlRegex)
         },
         message: '僅能輸入網址'
       }
