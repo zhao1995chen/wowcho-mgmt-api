@@ -8,6 +8,7 @@ import { registerRouter } from './routes/Register.route'
 import { profileRouter } from './routes/Profile.route'
 import { loginRouter } from './routes/Login.route'
 import { userRouter } from './routes/User.route'
+import { sponsorRouter } from './routes/Sponsor.route'
 
 const app = express()
 
@@ -21,5 +22,6 @@ app.use('/upload', uploadRouter)
 app.use('/register', registerRouter)
 app.use('/login', loginRouter)
 app.use('/profile', profileRouter)
+app.use('/sponsor', sponsorRouter)
 
 export default app
