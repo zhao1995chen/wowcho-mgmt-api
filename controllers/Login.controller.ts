@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs'
 import { ILogin } from '../interfaces/Login.interface'
 import { generateToken } from '../middlewares/Auth.middleware'
 import { User } from '../models/User.model'
+import { ERROR } from '../const'
 
 export const LoginController = {
   async login(req: Request, res: Response) {
@@ -15,16 +16,16 @@ export const LoginController = {
       
       // 驗證資料
       const validateError = loginData.validateSync()
-      if (validateError) throw validateError
+      if (validateError) throw { message: validateError }
 
       // 查找會員
       const user = await User.findOne<ILogin>({ account: loginData.account })
       // console.log('user', loginData.password, user.password)
-      if (!user) throw '帳號不存在'
+      if (!user) throw { fieldName: '帳號', message: ERROR.INVALID }
 
       // 驗證密碼
       const validPassword = await bcrypt.compare(loginData.password, user.password)
-      if (!validPassword) throw '密碼輸入錯誤'
+      if (!validPassword) throw { fieldName: '密碼', message: ERROR.WRONG_DATA }
       // console.log('password pass')
 
       // 創建 JWT
