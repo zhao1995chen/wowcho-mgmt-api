@@ -1,8 +1,7 @@
 import { Schema,model } from 'mongoose'
 import { IProposalDocument, eAgeLimit, eCategory, eStatus } from '../interfaces/Proposal.interface'
 import { v4 as uuidv4 } from 'uuid'
-import { urlRegex, checkStringNotBlank, checkGreaterCurrentTime, checkGreaterCurrentTimeOrNull, numberIsGreaterThanZero } from '../method/model.method'
-
+import { urlRegex, checkStringNotBlank, checkStringNotBlankOrNull, checkGreaterCurrentTime, checkGreaterCurrentTimeOrNull, numberIsGreaterThanZero } from '../method/model.method'
 
 const ProposalSchema = new Schema<IProposalDocument>(
   {
@@ -95,9 +94,9 @@ const ProposalSchema = new Schema<IProposalDocument>(
     },
     customizedUrl: {
       type: String,
-      default: () => uuidv4(),
+      default:() => uuidv4(),
       validate: {
-        validator: checkStringNotBlank,
+        validator: checkStringNotBlankOrNull,
         message: '不能為空'
       },
     },
@@ -141,6 +140,26 @@ const ProposalSchema = new Schema<IProposalDocument>(
     timestamps: true // 其實用不到
   }
 )
+
+// 中間層
+// 新增前觸發
+ProposalSchema.pre('save', function(next) {
+  if (this.customizedUrl === '') {
+    this.customizedUrl = uuidv4()
+  }
+  next()
+})
+
+// 更新前觸發
+ProposalSchema.pre('findOneAndUpdate', function(next) {
+  // 若 customizedUrl 是空字串，使用 uuid 代替
+  const update = this.getUpdate()
+  // 如果是物件，並且有 customizedUrl key 以及 customizedUrl 是空字串。
+  if (typeof update === 'object' && 'customizedUrl' in update && update.customizedUrl === '') {
+    update.customizedUrl = uuidv4()
+  }
+  next()
+})
 
 // 新增方案 id 至募資活列表
 ProposalSchema.methods.pushPlan = function(id) {
