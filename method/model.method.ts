@@ -9,6 +9,11 @@ export function checkStringNotBlank(value: string): boolean {
   return value.trim().length > 0
 }
 
+// 檢查是否為空字串，若不是空字串則需 >1 字串
+export function checkStringNotBlankOrNull(value: string): boolean {
+  return value === '' || value.trim().length > 0
+}
+
 export function checkGreaterCurrentTime(value: number | null): boolean {
   return value > Date.now()
 }
