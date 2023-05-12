@@ -96,10 +96,6 @@ const PlanSchema = new Schema<IPlanDocument>(
     toSponsor:{
       type: String,
       default:'',
-      validate: {
-        validator: checkStringNotBlank,
-        message: '不能為空'
-      },
     },
     specification: [specificationSchema],
     freightMainIsland:{

@@ -84,8 +84,7 @@ export const PlanController = {
       const page = Number(req.query.page) || 1 // 目前頁數
       const proposalUrl = req.query.proposalUrl // 募資活動 id
       if (!proposalUrl) throw { fieldName: '募資活動', message: ERROR.INVALID }
-
-      const planList = await Plan.find({ proposalUrl })
+      const planList = await Plan.find({ proposalUrl: proposalUrl })
         .select('_id proposalUrl image name summary actualPrice originalPrice quantity nowBuyers pickupDate')
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
@@ -102,6 +101,7 @@ export const PlanController = {
       errorHandler(res, e)
     }
   },
+
   // 獲得方案詳細
   async get(req: Request, res: Response) {
     try {
