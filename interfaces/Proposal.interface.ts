@@ -60,9 +60,9 @@ interface IProposal extends Document {
 	// 承諾與告示id列表
 	// promiseId:Array<Types.ObjectId>;
 	placardIdList: Array<Types.ObjectId>;
-	serviceContact: string;
-	risksChallenge: string;
-	returnGoods: string;
+	contact: string;
+	risk: string;
+	refund: string;
 }
 interface IProposalDocument extends IProposal {
   pushPlan: (id: Types.ObjectId) => void;

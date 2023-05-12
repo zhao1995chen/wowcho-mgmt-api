@@ -122,15 +122,15 @@ const ProposalSchema = new Schema<IProposalDocument>(
         ref: 'message'
       }
     ],
-    serviceContact: {
+    contact: {
       type: String,
       default: '',
     },
-    risksChallenge: {
+    risk: {
       type: String,
       default: '',
     },
-    returnGoods: {
+    refund: {
       type: String,
       default: '',
     },
@@ -151,15 +151,15 @@ ProposalSchema.pre('save', function(next) {
 })
 
 // 更新前觸發
-ProposalSchema.pre('findOneAndUpdate', function(next) {
-  // 若 customizedUrl 是空字串，使用 uuid 代替
-  const update = this.getUpdate()
-  // 如果是物件，並且有 customizedUrl key 以及 customizedUrl 是空字串。
-  if (typeof update === 'object' && 'customizedUrl' in update && update.customizedUrl === '') {
-    update.customizedUrl = uuidv4()
-  }
-  next()
-})
+// ProposalSchema.pre('findOneAndUpdate', function(next) {
+//   // 若 customizedUrl 是空字串，使用 uuid 代替
+//   const update = this.getUpdate()
+//   // 如果是物件，並且有 customizedUrl key 以及 customizedUrl 是空字串。
+//   if (typeof update === 'object' && 'customizedUrl' in update && update.customizedUrl === '') {
+//     update.customizedUrl = uuidv4()
+//   }
+//   next()
+// })
 
 // 新增方案 id 至募資活列表
 ProposalSchema.methods.pushPlan = function(id) {

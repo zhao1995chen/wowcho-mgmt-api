@@ -41,8 +41,8 @@ export const ProposalController = {
   async update(req: Request, res: Response) {
     try {
       if (!req.body) throw { message: ERROR.GENERAL }
-      const { id = '', ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, serviceContact, risksChallenge, returnGoods } =  req.body 
-      const userProposal = { ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, serviceContact, risksChallenge, returnGoods }
+      const { id = '', ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, contact, risk, refund } =  req.body 
+      const userProposal = { ownerId, image, video, name, category, summary, description, targetPrice, nowPrice, nowBuyers, startTime, endTime, ageLimit, customizedUrl, status, content, planIdList, messageIdList, faqIdList, contact, risk, refund }
       // 確認是否無 id
       const haveId = ProposalController.haveId(id)
       if(haveId) throw haveId
@@ -111,11 +111,11 @@ export const ProposalController = {
       let query = null
 
       const id = req.query.id // 指定 proposal id
-      const url = req.query.url
+      const proposalUrl = req.query.proposalUrl
       if (id !== undefined) {
         query = {_id: id}
       } else {
-        query = {customizedUrl: url }
+        query = {customizedUrl: proposalUrl }
       }
       const proposal = await Proposal.findOne<IProposal>(query)
         .catch(() => {
