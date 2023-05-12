@@ -122,15 +122,15 @@ const ProposalSchema = new Schema<IProposalDocument>(
         ref: 'message'
       }
     ],
-    serviceContact: {
+    contact: {
       type: String,
       default: '',
     },
-    risksChallenge: {
+    risk: {
       type: String,
       default: '',
     },
-    returnGoods: {
+    refund: {
       type: String,
       default: '',
     },
