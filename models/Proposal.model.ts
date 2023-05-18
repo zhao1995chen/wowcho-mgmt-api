@@ -64,6 +64,10 @@ const ProposalSchema = new Schema<IProposalDocument>(
         message: '僅能輸入零以上的數字',
       }
     },
+    nowBuyers:{
+      type: Number,
+      default: 0,
+    },
     nowPrice: {
       type: Number,
       default: 0,
