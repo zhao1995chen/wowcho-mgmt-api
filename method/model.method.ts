@@ -29,3 +29,11 @@ export function checkGreaterCurrentTimeOrNull(value: number | null): boolean {
 export function numberIsGreaterThanZero(value: number): boolean {
   return value > 0
 }
+
+// 檢查給定的時間戳是否大於當前時間
+export function checkNumIsGreaterThanZeroOrNull(value: number | null): boolean {
+  if (value === null) {
+    return true
+  }
+  return value > 0
+}
