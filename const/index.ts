@@ -24,7 +24,7 @@ const ERROR = {
   REQUIRED: 'fieldName 必填',
   NOT_CHANGED: 'fieldName 沒有改變',
   ERROR_FORMAT: 'filedName 不符合格式',
-  DUPLICATE: 'fieldValue 已被使用',
+  DUPLICATE: 'fieldName 已被使用',
   INVALID: 'fieldName 不存在',
   WRONG_DATA: 'fieldName 錯誤',
   OPERATION_FAILED: '操作失敗'
