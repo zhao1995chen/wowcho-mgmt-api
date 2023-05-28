@@ -95,6 +95,8 @@ export const ProposalController = {
         .select('_id image name customizedUrl category summary targetPrice nowPrice nowBuyers startTime endTime updatedAt createdAt')
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
+      console.log('ownerId', req.body._id)
+      console.log('list', proposalList)
       const totalCount = await Proposal.countDocuments({ ownerId: req.body._id })
       const data = {
         list: proposalList,
