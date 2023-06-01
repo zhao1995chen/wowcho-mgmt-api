@@ -85,7 +85,6 @@ export const LoginController = {
         const user = new User({
           oauthId: newOauthUser._id, // 將 user 的 oauthUser 欄位設定為 OauthUser 的 _id
           memberRole: 'google',
-          name,
           username: name,
           image: picture,
           email: email,

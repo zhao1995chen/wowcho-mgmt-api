@@ -27,7 +27,7 @@ const UserSchema = new Schema<IUser>(
     },
     gender: {
       type: Number,
-      default: null,
+      default: 0,
     },
     birthday: {
       type: Number,
@@ -52,6 +52,14 @@ const UserSchema = new Schema<IUser>(
     youtube:  {
       type: String,
       default: null,
+    },
+    memberRole:{
+      type: String,
+      default: 'default',
+    },
+    oauthId:{
+      type: Schema.Types.ObjectId,
+      ref: 'oauthUser'
     },
     __t: {
       type: String,

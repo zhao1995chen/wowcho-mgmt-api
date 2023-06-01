@@ -23,7 +23,7 @@ export const RegisterController = {
       if (duplicate) throw { message: duplicate }
       
       // 創建新會員
-      const { account, email, password } = newMember
+      const { account, email, username, password } = newMember
       const hashPassword = await bcrypt.hash(password, HASH_TIME)
       // console.log('hash', hashPassword)
 
@@ -31,8 +31,7 @@ export const RegisterController = {
       // const user = await Register.create({
         account,
         email,
-        name: account,
-        username: account,
+        username,
         password: hashPassword
       })
       // console.log('user', user)
