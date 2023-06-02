@@ -25,11 +25,10 @@ export const ProfileController = {
     try {
       const { _id } = req.body
       const payload = new Profile(req.body)
-      // console.log('update', payload)
 
       // 驗證資料
       const validateError = payload.validateSync()
-      if (validateError) throw { message: validateError }
+      if (validateError) throw { validateMessage: validateError, type: 'validate' }
 
       // 確認 email 是否變更
       const oldProfileData = await User.findById(_id)
@@ -38,7 +37,6 @@ export const ProfileController = {
         const duplicate = await ProfileController.duplicate(payload)
         if (duplicate) throw { message: duplicate }
       }
-
       await User.findOneAndUpdate({ _id }, payload)
       const data = await User.findById(_id).select({ _id: 0, password: 0 })
 

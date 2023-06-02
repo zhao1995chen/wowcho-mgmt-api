@@ -37,6 +37,19 @@ const UserSchema = new Schema<IUser>(
       type: String,
       default: null,
     },
+    memberRole:{
+      type: String,
+      default: 'default',
+    },
+    oauthId:{
+      type: Schema.Types.ObjectId,
+      ref: 'oauthUser'
+    },
+    __t: {
+      type: String,
+      select: false
+    },
+    // 商業檔案用欄位
     website: {
       type: String,
       default: null,
@@ -53,18 +66,22 @@ const UserSchema = new Schema<IUser>(
       type: String,
       default: null,
     },
-    memberRole:{
+    businessName: { // 提案單位名稱
       type: String,
-      default: 'default',
+      default:''
     },
-    oauthId:{
-      type: Schema.Types.ObjectId,
-      ref: 'oauthUser'
-    },
-    __t: {
+    businessIntro: {
       type: String,
-      select: false
-    }
+      default: ''
+    },
+    businessImage: {
+      type: String,
+      default:''
+    },
+    businessEmail: {
+      type: String,
+      default:''
+    },
   },
   {
     versionKey: false,

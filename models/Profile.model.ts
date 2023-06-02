@@ -35,9 +35,6 @@ const ProfileSchema = new Schema<IProfile>(
     birthday:  Number,
     address:  String,
     website:  String,
-    facebook: String,
-    instagram: String,
-    youtube:  String,
   },
   {
     versionKey: false,
