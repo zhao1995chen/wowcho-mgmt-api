@@ -15,7 +15,7 @@ export const ProposalController = {
       const newProposal:IProposal = new Proposal(req.body)
       // 驗證資料
       const validateError = newProposal.validateSync()
-      if (validateError) throw validateError
+      if (validateError) throw { validateMessage: validateError, type: 'validate' }
 
       // 募資活動網址重複
       const duplicate = await ProposalController.createDuplicate(newProposal)

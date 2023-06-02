@@ -20,7 +20,7 @@ export const LoginController = {
       
       // 驗證資料
       const validateError = loginData.validateSync()
-      if (validateError) throw { message: validateError }
+      if (validateError) throw { validateMessage: validateError, type: 'validate' }
 
       // 查找會員
       const user = await User.findOne<ILogin>({ account: loginData.account })
@@ -85,10 +85,11 @@ export const LoginController = {
         const user = new User({
           oauthId: newOauthUser._id, // 將 user 的 oauthUser 欄位設定為 OauthUser 的 _id
           memberRole: 'google',
-          name,
           username: name,
           image: picture,
           email: email,
+          businessName: name,
+          businessEmail: email
           // account: email
         })
         await newOauthUser.save()

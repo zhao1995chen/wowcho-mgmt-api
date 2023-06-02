@@ -18,7 +18,7 @@ export const PlanController = {
       })
       // 驗證資料
       const validateError = newPlan.validateSync()
-      if (validateError) throw validateError
+      if (validateError) throw { validateMessage: validateError, type: 'validate' }
 
       // 確認原價是否有值，有值才做驗證
       if(newPlan.originalPrice) {
