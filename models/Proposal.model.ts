@@ -144,16 +144,19 @@ const ProposalSchema = new Schema<IProposalDocument>(
 // 中間層
 // 新增前觸發
 ProposalSchema.pre('save', function(next) {
-  // customizedUrl 若為空字串，使用 uuid替換
-  if (this.customizedUrl === '') {
-    this.customizedUrl = uuidv4()
-  }
-  // 驗證開始時間，若沒超過當前時間抱錯
-  if (!checkGreaterCurrentTime(this.startTime)) {
-    next(new Error('募資開始時間，僅能超過當前時間'))
-  }
-  if (!checkGreaterCurrentTime(this.endTime)) {
-    next(new Error('募資結束時間，僅能超過當前時間'))
+  // 僅在新增時觸發的邏輯
+  if (this.isNew) {
+    // customizedUrl 若為空字串，使用 uuid替換
+    if (this.customizedUrl === '') {
+      this.customizedUrl = uuidv4()
+    }
+    // 驗證開始時間，若沒超過當前時間抱錯
+    if (!checkGreaterCurrentTime(this.startTime)) {
+      next(new Error('募資開始時間，僅能超過當前時間'))
+    }
+    if (!checkGreaterCurrentTime(this.endTime)) {
+      next(new Error('募資結束時間，僅能超過當前時間'))
+    }
   }
   next()
 })
