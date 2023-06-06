@@ -9,6 +9,9 @@ import { User } from '../models/User.model'
 import { ERROR } from '../const'
 import { oauthUser } from '../models/OauthUser.model'
 import { OAuth2Client } from 'google-auth-library'
+import { SuperAdmin } from '../models/SuperAdmin.model'
+import { ISuperAdmin } from '../interfaces/Superadmin.interface'
+
 const OAUTH_ID = process.env.OAUTH_ID
 const client = new OAuth2Client(OAUTH_ID)
 
@@ -101,6 +104,33 @@ export const LoginController = {
       errorHandler(res, e)
     }
   
+  },
+  async superAdminLogin(req: Request, res: Response) {
+    try {
+      // console.log('body', req.body)
+      const loginData = new Login(req.body)
+      
+      // 驗證資料
+      const validateError = loginData.validateSync()
+      if (validateError) throw { validateMessage: validateError, type: 'validate' }
+
+      // 查找會員
+      const superadmin = await SuperAdmin.findOne<ISuperAdmin>({ account: loginData.account })
+      // console.log('superadmin', loginData.password, superadmin.password)
+      if (!superadmin) throw { fieldName: '帳號', message: ERROR.INVALID }
+
+      // 驗證密碼
+      const validPassword = await bcrypt.compare(loginData.password, superadmin.password)
+      if (!validPassword) throw { fieldName: '密碼', message: ERROR.WRONG_DATA }
+      // console.log('password pass')
+
+      // 創建 JWT
+      const token = generateToken(superadmin)
+
+      successHandler(res, { token })
+    } catch(e) {
+      errorHandler(res, e)
+    }
   },
   options(req: Request, res: Response) {
     successHandler(res)
