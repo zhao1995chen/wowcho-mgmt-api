@@ -16,8 +16,11 @@ enum eCategory {
 }
 
 enum eStatus {
-	draft = 0, // 草稿
-	already = 1 // 上架
+	DRAFT, // 草稿
+	WAITING_FOR_APPROVAL, // 等待審核
+	APPROVED, // 審核通過
+	REJECTED, // 審核未通過
+	SUSPEND // 停權
 }
 
 interface IProposal extends Document {
@@ -48,7 +51,7 @@ interface IProposal extends Document {
 	ageLimit:eAgeLimit,
 	// 客製化 URL
 	customizedUrl:string
-	// 狀態 0 = 草稿，前台看不到 1 = 上架
+	// 狀態 只有審核通過前台會顯示
 	status: eStatus
 	// 關聯
 	// 提案人
