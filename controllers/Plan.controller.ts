@@ -144,7 +144,6 @@ export const PlanController = {
   async delete (req: Request, res: Response) {
     try {
       if (!req.body) throw { message: ERROR.GENERAL }
-      console.log(req.body)
       // 檢查所有文檔是否存在
       const proposalUrl = req.body.proposalUrl
       const planArray = req.body.id

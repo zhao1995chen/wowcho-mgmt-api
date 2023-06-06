@@ -5,6 +5,7 @@ import { successHandler } from '../services/successHandler'
 import { Sponsor } from '../models/Sponsor.model'
 // import { User } from '../models/User.model'
 import { errorHandler } from '../services/errorHandler'
+import { ERROR } from '../const'
 
 export const SponsorController = {
   // 取得贊助列表
@@ -23,7 +24,7 @@ export const SponsorController = {
         .sort({ createTime: -1 })
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
-      const totalCount = await Sponsor.countDocuments({  customizedUrl: customizedUrl })
+      const totalCount = await Sponsor.countDocuments({ customizedUrl: customizedUrl })
 
       const data = {
         list: sponsorList,
@@ -45,6 +46,9 @@ export const SponsorController = {
         .populate('ownerId')
         .populate('planId')
         .populate('proposalId')
+        .catch(() => {
+          throw  { fieldName: '贊助紀錄', message: ERROR.INVALID }
+        })
 
       // 計算總頁數, 有可能 user 的 sponsorIdList 取得的 sponsor 資料不一
       successHandler(res, data)
