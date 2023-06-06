@@ -12,6 +12,7 @@ import { proposalRouter } from './routes/Proposal.route'
 import { planRouter } from './routes/Plan.route'
 import { businessProfileRouter } from './routes/BusinessProfile.route'
 import { sponsorRouter } from './routes/Sponsor.route'
+import { dashboardRouter } from './routes/Dashboard.route'
 
 const app = express()
 app.use(cookieParser(process.env.COOKIE_SECRET))
@@ -28,5 +29,6 @@ app.use('/login', loginRouter)
 app.use('/profile', profileRouter)
 app.use('/business-profile', businessProfileRouter)
 app.use('/sponsor', sponsorRouter)
+app.use('/dashboard', dashboardRouter)
 
 export default app

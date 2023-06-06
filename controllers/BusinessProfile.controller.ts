@@ -5,6 +5,7 @@ import { IBusinessProfile } from '../interfaces/BusinessProfile.interface'
 import { BusinessProfile } from '../models/BusinessProfile.model'
 import { User } from '../models/User.model'
 import { Register } from '../models/Register.model'
+import { ERROR } from '../const'
 
 export const BusinessController = {
   // 修改商業
@@ -21,6 +22,8 @@ export const BusinessController = {
         upsert: false, // 如果沒找到匹配的文檔，不要創建新文檔
         runValidators: true, // 觸發 Schema 驗證
       })
+      if (!businessProfile) throw  { fieldName: '商業檔案', message: ERROR.INVALID }
+
       successHandler(res, businessProfile)
     }
     catch(e){
