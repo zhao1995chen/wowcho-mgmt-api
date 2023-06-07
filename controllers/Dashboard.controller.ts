@@ -11,14 +11,19 @@ export const DashboardController = {
   async get(req: Request, res: Response) {
     try {
       const proposalUrl = req.query.customizedUrl
-      const proposal = await (await Proposal.findOne<IProposal>({ customizedUrl: proposalUrl })).toObject()
+      
+      const proposal = await Proposal.findOne({ customizedUrl: proposalUrl })
+      if (!proposal) {
+        throw { message: ERROR.GENERAL }
+      }
+      const newProposal = await proposal.toObject()
       const orderCount = await Sponsor.countDocuments({ customizedUrl: proposalUrl })
       const planCount = await Plan.countDocuments({ proposalUrl })
       // 若方案數量等於零，回傳狀態 2 ，有資料回傳狀態 4
 
       const dashboardStatus = planCount === 0 ? 2 : 4
       const data = {
-        ...proposal,
+        ...newProposal,
         dashboardStatus,
         orderCount
       }

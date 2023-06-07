@@ -30,11 +30,11 @@ export const BusinessController = {
       errorHandler(res, e)
     }
   },
+  // 獲得商業資料
   async get (req: Request, res: Response) {
     try {
       const { _id } = req.body
       const data = await User.findById(_id).select('businessName businessEmail businessIntro businessImage facebook instagram website -_id')
-
       successHandler(res, data)
     }
     catch(e){

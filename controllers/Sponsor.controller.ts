@@ -15,7 +15,7 @@ export const SponsorController = {
       const page = Number(req.query.page) || 1 // 目前頁數
       const { customizedUrl } = req.query
       // 從 sponsor 表中撈出該使用者的贊助資料，並取得對應頁數的內容
-      const sponsorList = await Sponsor.find({ customizedUrl: customizedUrl,payStatus:true })
+      const sponsorList = await Sponsor.find({ customizedUrl: customizedUrl, payStatus:true })
         .populate('buyerId')
         .populate('ownerId')
         .populate('planId')
@@ -24,6 +24,9 @@ export const SponsorController = {
         .sort({ createTime: -1 })
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
+        .catch(() => { 
+          throw { message: ERROR.GENERAL }
+        }) 
       const totalCount = await Sponsor.countDocuments({ customizedUrl: customizedUrl })
 
       const data = {
@@ -49,7 +52,9 @@ export const SponsorController = {
         .catch(() => {
           throw  { fieldName: '贊助紀錄', message: ERROR.INVALID }
         })
-
+      if (!data) {
+        throw { message: ERROR.GENERAL }
+      }
       // 計算總頁數, 有可能 user 的 sponsorIdList 取得的 sponsor 資料不一
       successHandler(res, data)
     } catch(e) {
