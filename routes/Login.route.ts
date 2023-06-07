@@ -5,3 +5,4 @@ export const loginRouter = express.Router()
 
 loginRouter.post('/', LoginController.login)
 loginRouter.post('/oauth', LoginController.oauthLogin)
+loginRouter.post('/superadmin', LoginController.superAdminLogin)
