@@ -72,7 +72,6 @@ interface IProposal extends Document {
 interface IProposalDocument extends IProposal {
   pushPlan: (id: Types.ObjectId) => void
   removePlan: (array) => void
-  sponsorToPlan: (number) => IProposalDocument
 }
 
 export {

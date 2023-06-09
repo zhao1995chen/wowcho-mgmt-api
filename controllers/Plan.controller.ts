@@ -67,8 +67,8 @@ export const PlanController = {
           upsert: false, // 如果沒找到匹配的文檔，不要創建新文檔
           runValidators: true, // 觸發 Schema 驗證
         }
-      ).catch(()=>{
-        throw { fieldName: '募資方案', message: ERROR.INVALID }
+      ).catch((e)=>{
+        throw { validateMessage: e, type: 'validate' }
       })
       if (!plan) throw { fieldName: '募資方案', message: ERROR.INVALID }
       successHandler(res, plan)
@@ -159,12 +159,12 @@ export const PlanController = {
         })
       if (!proposal) throw { fieldName: '募資活動', message: ERROR.INVALID }
 
-      // 刪除募資方案資料
-      proposal.removePlan(planArray)
-      // 刪除方案
-      await Plan.deleteMany({ _id: { $in: planArray } })
+      // 刪除募資活動中，方案關聯資料
+      await proposal.removePlan(planArray)
+      // 刪除資料庫中方案資料
       // 刪除活動中方案 id 
-      await proposal.save()
+      // await proposal.save()
+      await Plan.deleteMany({ _id: { $in: planArray } })
       // splice
       successHandler(res)
     } catch(e){

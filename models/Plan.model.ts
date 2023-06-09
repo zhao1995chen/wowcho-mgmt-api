@@ -1,6 +1,6 @@
 import { Schema,model } from 'mongoose'
-import { IPlanDocument } from '../interfaces/Plan.interface'
-import { urlRegex, checkStringNotBlank,  checkGreaterCurrentTimeOrNull, numberIsGreaterThanZero, checkNumIsGreaterThanZeroOrNull } from '../method/model.method'
+import { IPlan } from '../interfaces/Plan.interface'
+import { urlRegex, checkStringNotBlank,  checkGreaterCurrentTime, numberIsGreaterThanZero, checkNumIsGreaterThanZeroOrNull } from '../method/model.method'
 
 // 規格
 const specificationSchema = new Schema({
@@ -25,7 +25,7 @@ const specificationSchema = new Schema({
   },
 })
 
-const PlanSchema = new Schema<IPlanDocument>(
+const PlanSchema = new Schema<IPlan>(
   {
     proposalUrl: {
       type:String,
@@ -59,9 +59,9 @@ const PlanSchema = new Schema<IPlanDocument>(
     },
     originalPrice: {
       type: Number,
-      default: null,
-      validate: {
-        validator :checkNumIsGreaterThanZeroOrNull,
+      required: [ true, '募資方案原始價格必填' ],
+      validate: {  
+        validator :numberIsGreaterThanZero,
         message: '原價不可小於 0'
       },
     },
@@ -78,7 +78,7 @@ const PlanSchema = new Schema<IPlanDocument>(
       default: null,
       validate: {
         validator :checkNumIsGreaterThanZeroOrNull,
-        message: '原價不可小於 0'
+        message: '方案數量若有輸入時不可小於 0'
       },
     },
     nowBuyers: {
@@ -88,10 +88,6 @@ const PlanSchema = new Schema<IPlanDocument>(
     pickupDate: {
       type: Number,
       default: null,
-      validate: {
-        validator :checkGreaterCurrentTimeOrNull,
-        message: '僅能超過當前時間'
-      },
     },
     toSponsor:{
       type: String,
@@ -117,22 +113,19 @@ const PlanSchema = new Schema<IPlanDocument>(
   }
 )
 
-// 購買時增加方案購買數亮
-PlanSchema.methods.addNowBuyers = function() {
-  this.nowBuyers += 1
-  return this.save()
-}
-
-// 購買時若 商品數量 不等於 null ，減少商品總數
-PlanSchema.methods.removeQuantity = function() {
-  if (this.quantity === null) {
-    return
+PlanSchema.pre('save', function(next) {
+  // 僅在新增時觸發的邏輯
+  if (this.isNew) {
+    // customizedUrl 若為空字串，使用 uuid替換
+    // 驗證開始時間，若沒超過當前時間抱錯
+    if (!checkGreaterCurrentTime(this.pickupDate)) {
+      next(new Error('出貨時間，僅能超過當前時間'))
+    }
   }
-  this.quantity - 1 
-  return this.save()
-}
+  next()
+})
 
-const Plan = model<IPlanDocument>('plan', PlanSchema)
+const Plan = model<IPlan>('plan', PlanSchema)
 
 export {
   Plan,

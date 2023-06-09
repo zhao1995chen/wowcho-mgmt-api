@@ -21,6 +21,8 @@ export const BusinessController = {
         new: true, // 返回更新後的文檔
         upsert: false, // 如果沒找到匹配的文檔，不要創建新文檔
         runValidators: true, // 觸發 Schema 驗證
+      }).catch((e)=>{
+        throw { validateMessage: e, type: 'validate' }
       })
       if (!businessProfile) throw  { fieldName: '商業檔案', message: ERROR.INVALID }
 
