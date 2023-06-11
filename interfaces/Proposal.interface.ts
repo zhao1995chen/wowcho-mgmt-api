@@ -63,7 +63,7 @@ interface IProposal extends Document {
 	// 常見問答id列表
 	faqIdList: Array<Types.ObjectId>;
 	// 承諾與告示id列表
-	// promiseId:Array<Types.ObjectId>;
+	// 專案進度 id 
 	placardIdList: Array<Types.ObjectId>;
 	contact: string;
 	risk: string;
@@ -72,6 +72,10 @@ interface IProposal extends Document {
 interface IProposalDocument extends IProposal {
   pushPlan: (id: Types.ObjectId) => void
   removePlan: (array) => void
+	pushFaq: (id: Types.ObjectId) => void
+  removeFaq: (array) => void
+	pushPlacard: (id: Types.ObjectId) => void
+  removePlacard: (array) => void
 }
 
 export {

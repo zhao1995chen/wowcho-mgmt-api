@@ -99,6 +99,12 @@ const ProposalSchema = new Schema<IProposalDocument>(
         ref: 'plan',
       }
     ],
+    placardIdList:[
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'placard',
+      }
+    ],
     faqIdList:  [{
       type: Schema.Types.ObjectId,
       ref: 'faq'
@@ -175,6 +181,37 @@ ProposalSchema.methods.removePlan = async function(array) {
   await this.save()
 }
 
+// 新增常見問答 id 至募資活列表
+ProposalSchema.methods.pushFaq = async function(id) {
+  this.faqIdList.push(id)
+  await this.save()
+}
+
+// 移除常見問答 id
+ProposalSchema.methods.removeFaq = async function(array) {
+  this.faqIdList.forEach((value, index) => {
+    if (array.includes(value)) {
+      this.faqIdList.splice(index, 1)
+    }
+  })
+  await this.save()
+}
+
+// 新增專案進度 id 至募資活列表
+ProposalSchema.methods.pushPlacard = async function(id) {
+  this.placardIdList.push(id)
+  await this.save()
+}
+
+// 移除專案進度 id
+ProposalSchema.methods.removhPlacard = async function(array) {
+  this.placardIdList.forEach((value, index) => {
+    if (array.includes(value)) {
+      this.placardIdList.splice(index, 1)
+    }
+  })
+  await this.save()
+}
 
 const Proposal = model<IProposalDocument>('proposal', ProposalSchema)
 

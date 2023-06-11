@@ -13,6 +13,8 @@ import { businessProfileRouter } from './routes/BusinessProfile.route'
 import { sponsorRouter } from './routes/Sponsor.route'
 import { dashboardRouter } from './routes/Dashboard.route'
 import { superAdminRouter } from './routes/superadmin/index.route'
+import { faqRouter } from './routes/Faq.route'
+import { placardRoute } from './routes/Placard.route'
 
 const app = express()
 app.use(cookieParser(process.env.COOKIE_SECRET))
@@ -30,6 +32,8 @@ app.use('/profile', profileRouter)
 app.use('/business-profile', businessProfileRouter)
 app.use('/sponsor', sponsorRouter)
 app.use('/dashboard', dashboardRouter)
+app.use('/faq', faqRouter)
+app.use('/placard', placardRoute)
 
 // 跟第一第二角色區隔，功能 Router 在 superAdminRouter 中
 app.use('/superadmin', superAdminRouter)
