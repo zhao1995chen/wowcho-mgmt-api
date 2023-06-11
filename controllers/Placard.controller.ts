@@ -70,7 +70,7 @@ export const PlacardController = {
       if (!proposal) throw { fieldName: '募資活動', message: ERROR.INVALID }
       // 驗證都通過，儲存新增 plan 至資料庫
       const savePlacard = await newPlacard.save()
-      await proposal.pushFaq(savePlacard._id)
+      await proposal.pushPlacard(savePlacard._id)
       successHandler(res, savePlacard)
     }  catch (error) {
       errorHandler(res, error)
@@ -122,7 +122,7 @@ export const PlacardController = {
       if (!proposal) throw { fieldName: '募資活動', message: ERROR.INVALID }
 
       // 刪除募資活動中，方案關聯資料
-      await proposal.removeFaq(placardArray)
+      await proposal.removePlacard(placardArray)
       // 刪除資料庫中方案資料
       // 刪除活動中方案 id 
       // await proposal.save()

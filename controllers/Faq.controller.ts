@@ -58,7 +58,6 @@ export const FaqController = {
         ...req.body,
         _id: new Types.ObjectId(),
       })
-      console.log(url,newFaq)
       // 驗證資料
       const validateError = newFaq.validateSync()
       if (validateError) throw { validateMessage: validateError, type: 'validate' }
@@ -67,7 +66,6 @@ export const FaqController = {
         .catch(()=>{
           throw {  message:ERROR.GENERAL }
         })
-      console.log(proposal)
       // 若不存在跳錯
       if (!proposal) throw { fieldName: '募資活動', message: ERROR.INVALID }
       // 驗證都通過，儲存新增 plan 至資料庫
