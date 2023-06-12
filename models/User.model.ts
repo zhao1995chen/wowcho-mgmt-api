@@ -27,7 +27,7 @@ const UserSchema = new Schema<IUser>(
     },
     gender: {
       type: Number,
-      default: null,
+      default: 0,
     },
     birthday: {
       type: Number,
@@ -37,6 +37,19 @@ const UserSchema = new Schema<IUser>(
       type: String,
       default: null,
     },
+    memberRole:{
+      type: String,
+      default: 'default',
+    },
+    oauthId:{
+      type: Schema.Types.ObjectId,
+      ref: 'oauthUser'
+    },
+    __t: {
+      type: String,
+      select: false
+    },
+    // 商業檔案用欄位
     website: {
       type: String,
       default: null,
@@ -53,10 +66,22 @@ const UserSchema = new Schema<IUser>(
       type: String,
       default: null,
     },
-    __t: {
+    businessName: { // 提案單位名稱
       type: String,
-      select: false
-    }
+      default:''
+    },
+    businessIntro: {
+      type: String,
+      default: ''
+    },
+    businessImage: {
+      type: String,
+      default:''
+    },
+    businessEmail: {
+      type: String,
+      default:''
+    },
   },
   {
     versionKey: false,

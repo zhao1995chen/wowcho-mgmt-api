@@ -15,7 +15,7 @@ export const RegisterController = {
 
       // 驗證資料
       const validateError = newMember.validateSync()
-      if (validateError) throw { message: validateError }
+      if (validateError) throw { validateMessage: validateError, type: 'validate' }
 
       // console.log('register', req.body, newMember)
       // 確認沒有重複的 account 跟 email
@@ -23,7 +23,7 @@ export const RegisterController = {
       if (duplicate) throw { message: duplicate }
       
       // 創建新會員
-      const { account, email, password } = newMember
+      const { account, email, username, password } = newMember
       const hashPassword = await bcrypt.hash(password, HASH_TIME)
       // console.log('hash', hashPassword)
 
@@ -31,9 +31,10 @@ export const RegisterController = {
       // const user = await Register.create({
         account,
         email,
-        name: account,
-        username: account,
-        password: hashPassword
+        username,
+        password: hashPassword,
+        businessName: username,
+        businessEmail: email
       })
       // console.log('user', user)
 

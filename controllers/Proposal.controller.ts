@@ -15,7 +15,7 @@ export const ProposalController = {
       const newProposal:IProposal = new Proposal(req.body)
       // 驗證資料
       const validateError = newProposal.validateSync()
-      if (validateError) throw validateError
+      if (validateError) throw { validateMessage: validateError, type: 'validate' }
 
       // 募資活動網址重複
       const duplicate = await ProposalController.createDuplicate(newProposal)
@@ -61,6 +61,8 @@ export const ProposalController = {
         new: true, // 返回更新後的文檔
         upsert: false, // 如果沒找到匹配的文檔，不要創建新文檔
         runValidators: true, // 觸發 Schema 驗證
+      }).catch((e)=>{
+        throw { validateMessage: e, type: 'validate' }
       })
       if (!proposal) throw  { fieldName: '募資活動', message: ERROR.INVALID }
 

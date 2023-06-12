@@ -36,7 +36,7 @@ const ProposalSchema = new Schema<IProposalDocument>(
       required: [ true, '募資活動分類必填' ],
       enum: {
         values: Object.values(eCategory),
-        message: '類別必須是數字 `0` 至 `6`'
+        message: '類別必須是數字 1 至 8'
       },
     },
     summary: {
@@ -61,7 +61,7 @@ const ProposalSchema = new Schema<IProposalDocument>(
       required: [ true, '募資活動達標金額必填' ],
       validate: {
         validator: numberIsGreaterThanZero,
-        message: '僅能輸入零以上的數字',
+        message: '達標金額僅能輸入零以上的數字',
       }
     },
     nowPrice: {
@@ -71,18 +71,10 @@ const ProposalSchema = new Schema<IProposalDocument>(
     startTime: {
       type: Number,
       required: [ true, '募資活動開始時間必填' ],
-      validate: {
-        validator :checkGreaterCurrentTime,
-        message: '僅能超過當前時間'
-      },
     },
     endTime: {
       type: Number,
-      default:null,
-      validate: {
-        validator :checkGreaterCurrentTimeOrNull,
-        message: '僅能超過當前時間'
-      },
+      required: [ true, '募資活動結束時間必填' ],
     },
     ageLimit: {
       type: Number,
@@ -94,11 +86,6 @@ const ProposalSchema = new Schema<IProposalDocument>(
     },
     customizedUrl: {
       type: String,
-      default:() => uuidv4(),
-      validate: {
-        validator: checkStringNotBlankOrNull,
-        message: '不能為空'
-      },
     },
     status: {
       type: Number,
@@ -110,6 +97,12 @@ const ProposalSchema = new Schema<IProposalDocument>(
       {
         type: Schema.Types.ObjectId,
         ref: 'plan',
+      }
+    ],
+    placardIdList:[
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'placard',
       }
     ],
     faqIdList:  [{
@@ -144,8 +137,19 @@ const ProposalSchema = new Schema<IProposalDocument>(
 // 中間層
 // 新增前觸發
 ProposalSchema.pre('save', function(next) {
-  if (this.customizedUrl === '') {
-    this.customizedUrl = uuidv4()
+  // 僅在新增時觸發的邏輯
+  if (this.isNew) {
+    // customizedUrl 若為空字串，使用 uuid替換
+    if (this.customizedUrl === '') {
+      this.customizedUrl = uuidv4()
+    }
+    // 驗證開始時間，若沒超過當前時間抱錯
+    if (!checkGreaterCurrentTime(this.startTime)) {
+      next(new Error('募資開始時間，僅能超過當前時間'))
+    }
+    if (!checkGreaterCurrentTime(this.endTime)) {
+      next(new Error('募資結束時間，僅能超過當前時間'))
+    }
   }
   next()
 })
@@ -162,31 +166,51 @@ ProposalSchema.pre('save', function(next) {
 // })
 
 // 新增方案 id 至募資活列表
-ProposalSchema.methods.pushPlan = function(id) {
+ProposalSchema.methods.pushPlan = async function(id) {
   this.planIdList.push(id)
-  return this.save()
+  await this.save()
 }
 
 // 移除方案 id
-ProposalSchema.methods.removePlan = function(array) {
+ProposalSchema.methods.removePlan = async function(array) {
   this.planIdList.forEach((value, index) => {
     if (array.includes(value)) {
       this.planIdList.splice(index, 1)
     }
   })
-  return this.save()
+  await this.save()
 }
 
-// 購買時增加當前購買數
-ProposalSchema.methods.addNowBuyers = function() {
-  this.nowBuyers += 1
-  return this.save()
+// 新增常見問答 id 至募資活列表
+ProposalSchema.methods.pushFaq = async function(id) {
+  this.faqIdList.push(id)
+  await this.save()
 }
 
-// 購買時增加當前募資總金額
-ProposalSchema.methods.addNowPrice = function(Price:number) {
-  this.nowPrice += Price
-  return this.save()
+// 移除常見問答 id
+ProposalSchema.methods.removeFaq = async function(array) {
+  this.faqIdList.forEach((value, index) => {
+    if (array.includes(value)) {
+      this.faqIdList.splice(index, 1)
+    }
+  })
+  await this.save()
+}
+
+// 新增專案進度 id 至募資活列表
+ProposalSchema.methods.pushPlacard = async function(id) {
+  this.placardIdList.push(id)
+  await this.save()
+}
+
+// 移除專案進度 id
+ProposalSchema.methods.removhPlacard = async function(array) {
+  this.placardIdList.forEach((value, index) => {
+    if (array.includes(value)) {
+      this.placardIdList.splice(index, 1)
+    }
+  })
+  await this.save()
 }
 
 const Proposal = model<IProposalDocument>('proposal', ProposalSchema)

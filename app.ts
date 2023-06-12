@@ -7,9 +7,14 @@ import { uploadRouter } from './routes/Upload.route'
 import { registerRouter } from './routes/Register.route'
 import { profileRouter } from './routes/Profile.route'
 import { loginRouter } from './routes/Login.route'
-import { userRouter } from './routes/User.route'
 import { proposalRouter } from './routes/Proposal.route'
 import { planRouter } from './routes/Plan.route'
+import { businessProfileRouter } from './routes/BusinessProfile.route'
+import { sponsorRouter } from './routes/Sponsor.route'
+import { dashboardRouter } from './routes/Dashboard.route'
+import { superAdminRouter } from './routes/superadmin/index.route'
+import { faqRouter } from './routes/Faq.route'
+import { placardRoute } from './routes/Placard.route'
 
 const app = express()
 app.use(cookieParser(process.env.COOKIE_SECRET))
@@ -24,5 +29,13 @@ app.use('/plan', planRouter)
 app.use('/register', registerRouter)
 app.use('/login', loginRouter)
 app.use('/profile', profileRouter)
+app.use('/business-profile', businessProfileRouter)
+app.use('/sponsor', sponsorRouter)
+app.use('/dashboard', dashboardRouter)
+app.use('/faq', faqRouter)
+app.use('/placard', placardRoute)
+
+// 跟第一第二角色區隔，功能 Router 在 superAdminRouter 中
+app.use('/superadmin', superAdminRouter)
 
 export default app

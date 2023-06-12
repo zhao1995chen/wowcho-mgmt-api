@@ -33,12 +33,6 @@ interface IPlan extends Document {
 	freightOtherCountries:number | null,
 }
 
-interface IPlanDocument extends IPlan {
-  removeQuantity: () => void;
-  addNowBuyers: () => void;
-}
-
 export {
   IPlan,
-  IPlanDocument
 }

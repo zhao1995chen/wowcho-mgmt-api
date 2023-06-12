@@ -14,6 +14,10 @@ const RegisterSchema = new Schema<IUser & IRegister>(
       minlength: [ 8, '密碼最少要 8 碼'],
       required: [ true, '密碼必填' ]
     },
+    username: {
+      type: String,
+      required: [ true, '會員名稱必填' ]
+    },
     email: {
       type: String,
       required: [ true, '信箱必填' ],
@@ -24,6 +28,10 @@ const RegisterSchema = new Schema<IUser & IRegister>(
         },
         message: ({value}) => `${value} 不符合驗證格式`
       }
+    },
+    memberRole:{
+      type: String,
+      default: 'default',
     },
   },
   {

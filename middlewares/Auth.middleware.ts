@@ -4,9 +4,10 @@ import { Request, Response } from 'express'
 import { errorHandler } from '../services/errorHandler'
 import { Error } from 'mongoose'
 import { ERROR } from '../const'
+import { ISuperAdmin } from '../interfaces/Superadmin.interface'
 
 // 產生 token
-const generateToken = (user: ILogin) => {
+const generateToken = (user: ILogin | ISuperAdmin) => {
   // console.log('jwt', user)
 
   return jwt.sign(

@@ -6,7 +6,7 @@ const ProfileSchema = new Schema<IProfile>(
   {
     name: {
       type: String,
-      required: [true, '真實姓名必填'],
+      // required: [true, '真實姓名必填'],
     },
     username: {
       type: String,
@@ -28,15 +28,13 @@ const ProfileSchema = new Schema<IProfile>(
     customizedUrl:  String,
     gender: {
       type: Number,
-      required: [true, '性別必填'],
+      default: 0,
+      // required: [true, '性別必填'],
       enum: [ -1, 0, 1, 2, 3, 4 ],
     },
     birthday:  Number,
     address:  String,
     website:  String,
-    facebook: String,
-    instagram: String,
-    youtube:  String,
   },
   {
     versionKey: false,
