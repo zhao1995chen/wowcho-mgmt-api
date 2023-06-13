@@ -39,11 +39,11 @@ export const ProposalController = {
   // 操作提案：審核，停權
   async update(req: Request, res: Response) {
     try {
-      const { _id } = req.body
+      const { id } = req.body
       const status = +req.body.status
 
       // 確認提案存在
-      const proposal = await Proposal.findById(_id)
+      const proposal = await Proposal.findById(id)
       if (!proposal) throw { message: ERROR.GENERAL }
 
       // 確認是狀態有效值
@@ -68,7 +68,7 @@ export const ProposalController = {
       if(!flag) throw { message: ERROR.INVALID }
 
       // 更新狀態
-      await Proposal.findByIdAndUpdate(_id, { status })
+      await Proposal.findByIdAndUpdate(id, { status })
       successHandler(res)
     } catch(e) {
       errorHandler(res, e)

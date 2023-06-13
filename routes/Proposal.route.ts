@@ -10,4 +10,5 @@ proposalRouter
   .get('/details', isAuth, ProposalController.get)
   .post('/', isAuth, ProposalController.create)
   .patch('/details', isAuth, ProposalController.update)
+  .patch('/offShelf', isAuth, ProposalController.offShelfProposal)
   .delete('/', isAuth, ProposalController.delete)

@@ -20,7 +20,8 @@ enum eStatus {
 	WAITING_FOR_APPROVAL, // 等待審核
 	APPROVED, // 審核通過
 	REJECTED, // 審核未通過
-	SUSPEND // 停權
+	SUSPEND, // 停權
+	OFF_SHELF // 下架
 }
 
 interface IProposal extends Document {

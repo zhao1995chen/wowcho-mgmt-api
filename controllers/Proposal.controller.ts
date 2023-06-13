@@ -94,7 +94,7 @@ export const ProposalController = {
       const pageSize = Number(req.query.pageSize) || 10 // 每頁顯示幾筆資料
       const page = Number(req.query.page) || 1 // 目前頁數
       const proposalList = await Proposal.find({ ownerId: req.body._id })
-        .select('_id image name customizedUrl category summary targetPrice nowPrice nowBuyers startTime endTime updatedAt createdAt')
+        .select('_id image name customizedUrl category summary targetPrice nowPrice nowBuyers startTime endTime status updatedAt createdAt')
         .skip((pageSize * page) - pageSize)
         .limit(pageSize)
       const totalCount = await Proposal.countDocuments({ ownerId: req.body._id })
@@ -174,5 +174,21 @@ export const ProposalController = {
     }
     // 若是 null 直接通過 
     return
+  },
+  // 下架募資提案
+  async offShelfProposal (req: Request, res: Response) {
+    try {
+      const { id } = req.body
+
+      // 確認提案存在
+      const proposal = await Proposal.findById(id)
+      if (!proposal) throw { message: ERROR.GENERAL }
+
+      // 更新狀態
+      await Proposal.findByIdAndUpdate(id, { status: 5 })
+      successHandler(res)
+    } catch(e) {
+      errorHandler(res, e)
+    }
   }
 }
