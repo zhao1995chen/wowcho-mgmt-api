@@ -8,7 +8,7 @@ module.exports = {
     {
       name: 'wowcho-mgmt-api',
       script: './server.ts',
-      interpreter: 'ts-node',
+      interpreter: '/home/ryder/.nvm/versions/node/v16.19.0/bin/ts-node', // 使用絕對路徑
       instances: 2,
       exec_mode : "cluster", //cpu 負載平衡模式
       max_memory_restart: '1G',
