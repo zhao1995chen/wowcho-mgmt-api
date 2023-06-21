@@ -204,7 +204,7 @@ ProposalSchema.methods.pushPlacard = async function(id) {
 }
 
 // 移除專案進度 id
-ProposalSchema.methods.removhPlacard = async function(array) {
+ProposalSchema.methods.removePlacard = async function(array) {
   this.placardIdList.forEach((value, index) => {
     if (array.includes(value)) {
       this.placardIdList.splice(index, 1)
